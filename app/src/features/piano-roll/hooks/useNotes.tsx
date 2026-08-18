@@ -1,9 +1,9 @@
-import { isNoteEvent, NoteEvent } from "@signal-app/core"
 import { Rect } from "@signal-app/geometry"
-import { useCallback, useMemo } from "react"
-import { useEventView } from "../../../hooks/useEventView"
+import { NoteEvent } from "@signal-app/pianoroll-editor"
+import { useCallback, useMemo, useSyncExternalStore } from "react"
 import { useNoteCoordTransform } from "./useNoteCoordTransform"
 import { usePianoRoll } from "./usePianoRoll"
+import { usePianoRollEditor } from "./usePianoRollEditor"
 
 export type PianoNoteItem = Rect & {
   id: number
@@ -15,7 +15,11 @@ export type PianoNoteItem = Rect & {
 export function useNotes(): PianoNoteItem[] {
   const { selectedTrack, selectedNoteIds } = usePianoRoll()
   const { transform } = useNoteCoordTransform()
-  const noteEvents = useEventView().filter(isNoteEvent)
+  const pianoRollEditor = usePianoRollEditor()
+  const noteEvents = useSyncExternalStore(
+    pianoRollEditor.onNotesChanged.subscribe,
+    () => pianoRollEditor.notes,
+  )
 
   const getRect = useCallback(
     (e: NoteEvent) =>

@@ -8,8 +8,8 @@ import {
   PianoNotesClipboardDataSchema,
   quantizeNotes,
   removeEvents,
-  transposeNotes,
 } from "@signal-app/core"
+import { transposeNotes } from "@signal-app/pianoroll-editor"
 import { useCallback } from "react"
 import { useMutateTrack } from "../../../hooks/useCommand"
 import { useHistory } from "../../../hooks/useHistory"
@@ -24,12 +24,12 @@ import {
 import { useControlPane } from "../../control-pane/hooks/useControlPane"
 import { Selection } from "../entities/Selection"
 import { usePianoRoll, usePianoRollQuantizer } from "./usePianoRoll"
+import { usePianoRollEditor } from "./usePianoRollEditor"
 
 export const useTransposeSelection = () => {
-  const { selectedTrackId, selection, selectedNoteIds, setSelection } =
-    usePianoRoll()
+  const { selection, selectedNoteIds, setSelection } = usePianoRoll()
   const { pushHistory } = useHistory()
-  const mutate = useMutateTrack(selectedTrackId)
+  const pianoRollEditor = usePianoRollEditor()
 
   return useCallback(
     (deltaPitch: number) => {
@@ -40,9 +40,9 @@ export const useTransposeSelection = () => {
         setSelection(s)
       }
 
-      mutate(transposeNotes(selectedNoteIds, deltaPitch))
+      pianoRollEditor.mutate(transposeNotes(selectedNoteIds, deltaPitch))
     },
-    [pushHistory, selection, setSelection, mutate, selectedNoteIds],
+    [pushHistory, selection, setSelection, pianoRollEditor, selectedNoteIds],
   )
 }
 

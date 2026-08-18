@@ -1,4 +1,5 @@
 import { TrackId, UNASSIGNED_TRACK_ID } from "@signal-app/core"
+import { createPianoRollEditor } from "@signal-app/pianoroll-editor"
 import { atom, useAtom, useAtomValue, useSetAtom, useStore } from "jotai"
 import { useAtomCallback } from "jotai/utils"
 import { Store } from "jotai/vanilla/store"
@@ -28,6 +29,7 @@ import {
   useTickScroll,
 } from "../../../hooks/useTickScroll"
 import { Selection } from "../entities/Selection"
+import { PianoRollEditorProvider } from "./usePianoRollEditor"
 
 type PianoRollStore = {
   quantizerScope: Store
@@ -65,6 +67,11 @@ function PianoRollProviderInner({ children }: { children: React.ReactNode }) {
   const store = useStore()
   const { selectedTrack, selectedTrackId, setSelectedTrackId } = usePianoRoll()
 
+  const pianoRollEditor = useMemo(
+    () => selectedTrack && createPianoRollEditor(selectedTrack),
+    [selectedTrack],
+  )
+
   useAtom(resetSelectionEffectAtom, { store })
 
   // Initially select the first track that is not a conductor track
@@ -85,18 +92,24 @@ function PianoRollProviderInner({ children }: { children: React.ReactNode }) {
     midiRecorder.trackId = selectedTrackId ?? UNASSIGNED_TRACK_ID
   }, [midiRecorder, selectedTrackId])
 
-  return children
+  if (pianoRollEditor === undefined) {
+    return null
+  }
+
+  return (
+    <PianoRollEditorProvider value={pianoRollEditor}>
+      {children}
+    </PianoRollEditorProvider>
+  )
 }
 
 export function PianoRollScope({ children }: { children: React.ReactNode }) {
   const { quantizerScope, tickScrollScope, beatsScope } = useContext(
     PianoRollStoreContext,
   )
-  const { selectedTrackId } = usePianoRoll()
-
   return (
     <TickScrollProvider scope={tickScrollScope} minScaleX={0.15} maxScaleX={15}>
-      <EventViewProvider trackId={selectedTrackId}>
+      <EventViewProvider>
         <QuantizerProvider scope={quantizerScope} quantize={8}>
           <BeatsProvider scope={beatsScope}>{children}</BeatsProvider>
         </QuantizerProvider>
