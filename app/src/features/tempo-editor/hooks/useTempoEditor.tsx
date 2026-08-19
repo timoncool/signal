@@ -8,6 +8,7 @@ import {
   useMemo,
   useSyncExternalStore,
 } from "react"
+import { historyAtom } from "../../../hooks/historyAtom"
 import { BeatsProvider, createBeatsScope } from "../../../hooks/useBeats"
 import {
   createQuantizerScope,
@@ -121,8 +122,8 @@ export function useTempoEditor() {
 
 // atoms
 const mouseModeAtom = atom<"pencil" | "selection">("pencil")
-const selectionAtom = atom<TempoSelection | null>(null)
-const selectedEventIdsAtom = atom<readonly number[]>([])
+const selectionAtom = historyAtom(atom<TempoSelection | null>(null))
+const selectedEventIdsAtom = historyAtom(atom<readonly number[]>([]))
 
 // actions
 const resetSelectionAtom = atom(null, (_get, set) => {
