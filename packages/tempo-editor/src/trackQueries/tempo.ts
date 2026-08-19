@@ -1,11 +1,15 @@
+import {
+  filter,
+  getAll,
+  getEventById,
+  isSetTempoEvent,
+  TrackEventOf,
+  TrackEventsQuery,
+} from "@signal-app/core"
 import { flow } from "lodash"
 import { SetTempoEvent } from "midifile-ts"
-import { filter } from "../../../helpers"
-import { isSetTempoEvent, TrackEventOf } from "../../event"
-import { TempoItem } from "../../tempo/TempoItem"
-import { setTempoEventToTempoItem } from "../../tempo/transform"
-import { getAll, getEventById } from "./primitives"
-import { TrackEventsQuery } from "./type"
+import { TempoItem } from "../entities"
+import { setTempoEventToTempoItem } from "../entities/tempo/transform"
 
 const getSetTempoEvents: TrackEventsQuery<
   readonly TrackEventOf<SetTempoEvent>[]

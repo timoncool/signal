@@ -1,10 +1,10 @@
-import { TempoItem } from "@signal-app/core"
+import { TempoItem } from "../entities"
 import { TempoEditorMutator, TempoEditorMutatorContext } from "./type"
 
 export interface MutableTempoEditor {
-  addItems: (items: readonly Omit<TempoItem, "id">[]) => TempoItem[]
-  removeItems: (ids: readonly number[]) => void
-  updateItems: (items: readonly TempoItem[]) => void
+  addItem: (item: Omit<TempoItem, "id">) => TempoItem
+  removeItem: (id: number) => void
+  updateItem: (item: TempoItem) => void
 }
 
 const asMutableTempoEditor = (
@@ -14,16 +14,14 @@ const asMutableTempoEditor = (
 export const addItem =
   (item: Omit<TempoItem, "id">): TempoEditorMutator<TempoItem | undefined> =>
   (context) =>
-    asMutableTempoEditor(context).addItems([item])[0]
+    asMutableTempoEditor(context).addItem(item)
 
 export const removeItem =
   (id: number): TempoEditorMutator<void> =>
-  (context) => {
-    asMutableTempoEditor(context).removeItems([id])
-  }
+  (context) =>
+    asMutableTempoEditor(context).removeItem(id)
 
 export const updateItem =
   (item: TempoItem): TempoEditorMutator<void> =>
-  (context) => {
-    asMutableTempoEditor(context).updateItems([item])
-  }
+  (context) =>
+    asMutableTempoEditor(context).updateItem(item)

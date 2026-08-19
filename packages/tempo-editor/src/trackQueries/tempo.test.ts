@@ -1,8 +1,7 @@
+import { addEvent, NoteEvent, TrackEvent, TrackEventOf } from "@signal-app/core"
 import { SetTempoEvent } from "midifile-ts"
 import { describe, expect, it } from "vitest"
-import { TickOrderedArray } from "../../../data/OrdererdArray/TickOrderedArray"
-import { NoteEvent, TrackEvent, TrackEventOf } from "../../event/TrackEvent"
-import { addEvent } from "../mutations"
+import { TickOrderedArray } from "../../../core/src/data/OrdererdArray/TickOrderedArray"
 import { getTempoItemById } from "./tempo"
 
 describe("track queries/tempo", () => {

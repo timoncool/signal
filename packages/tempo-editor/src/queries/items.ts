@@ -1,9 +1,8 @@
-import { Range, TempoItem } from "@signal-app/core"
+import { Range } from "@signal-app/core"
+import { TempoItem } from "../entities"
 import { ClipboardData } from "../entities/clipboardTypes"
 import { getItemById, getItems } from "./primitives"
 import { TempoEditorQuery } from "./type"
-
-export const listItems: TempoEditorQuery<readonly TempoItem[]> = getItems
 
 export const getItemsByIds =
   (ids: readonly number[]): TempoEditorQuery<readonly TempoItem[]> =>
@@ -15,7 +14,7 @@ export const getItemsByIds =
 export const getEventIdsInRange =
   (range: Range): TempoEditorQuery<readonly number[]> =>
   (context) => {
-    return getItems(context)
+    return getItems()(context)
       .filter((item) => Range.contains(range, item.tick))
       .map((item) => item.id)
   }

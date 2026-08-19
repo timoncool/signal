@@ -1,4 +1,4 @@
-import { TempoItem } from "@signal-app/core"
+import { TempoItem } from "@signal-app/tempo-editor"
 import { TempoGraphItem } from "../components/TempoGraphItem"
 import { TempoCoordTransform } from "../entities/TempoCoordTransform"
 

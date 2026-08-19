@@ -20,7 +20,7 @@ This allows the app layer to remain Jotai-based without coupling to core interna
 
 - Domain entities for song/track/measure/selection/transform/midi.
 - Song-level command functions (`SongCommand`/`SongTracksCommand` in `entities/song/commands`, e.g. `addNewTrack`, `moveTrack`) and track-level mutation/query functions (`TrackEventsMutator`/`TrackEventsQuery`) that execute edit operations against `Song`/`Track`.
-- A public surface (mutation/query functions plus entities like `Track`, `Song`, `TempoItem`) that sibling Editor-facade packages build on — see `@signal-app/tempo-editor` and `@signal-app/control-editor`, which wrap it behind an explicit `query`/`mutate`/`observe` surface so app code doesn't touch `Song`/`Track` internals directly.
+- A public surface (mutation/query functions plus entities like `Track`, `Song`) that sibling Editor-facade packages build on — see `@signal-app/tempo-editor` and `@signal-app/control-editor`, which wrap it behind an explicit `query`/`mutate`/`observe` surface so app code doesn't touch `Song`/`Track` internals directly. Domain DTOs owned by a single editor (e.g. `TempoItem`) live in that editor's own package instead of here.
 - Store layer (`SongStore`, `MIDIDeviceStore`, `BluetoothMIDIDeviceStore`) with explicit observable events.
 - Data/repository layer including `IndexedDBStorage` and `SoundFontRepository`.
 

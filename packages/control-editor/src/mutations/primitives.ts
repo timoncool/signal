@@ -3,8 +3,8 @@ import { ControlEditorMutator, ControlEditorMutatorContext } from "./type"
 
 export interface MutableControlEditor {
   addItem: (item: Omit<ControlItem, "id">) => ControlItem
-  removeItems: (ids: readonly number[]) => void
-  updateItems: (items: readonly ControlItem[]) => void
+  removeItem: (id: number) => void
+  updateItem: (item: ControlItem) => void
 }
 
 const asMutableControlEditor = (
@@ -18,12 +18,10 @@ export const addItem =
 
 export const removeItem =
   (id: number): ControlEditorMutator<void> =>
-  (context) => {
-    asMutableControlEditor(context).removeItems([id])
-  }
+  (context) =>
+    asMutableControlEditor(context).removeItem(id)
 
 export const updateItem =
   (item: ControlItem): ControlEditorMutator<void> =>
-  (context) => {
-    asMutableControlEditor(context).updateItems([item])
-  }
+  (context) =>
+    asMutableControlEditor(context).updateItem(item)

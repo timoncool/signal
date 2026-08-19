@@ -87,7 +87,7 @@ describe("tempo editor composed mutations", () => {
       { tick: 20, bpm: 150 },
     ])
     const [source] = editor.getItems()
-    editor.addItems([{ tick: source.tick, bpm: 160 }])
+    editor.addItem({ tick: source.tick, bpm: 160 })
 
     removeRedundantItems([source.id])(editor)
 

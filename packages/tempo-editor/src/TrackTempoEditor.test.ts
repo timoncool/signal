@@ -14,9 +14,9 @@ describe("TrackTempoEditor", () => {
   it("adds, updates, and removes items", () => {
     const editor = createTrackTempoEditor()
 
-    const [added] = editor.addItems([{ tick: 10, bpm: 120 }])
-    editor.updateItems([{ ...added, tick: 20, bpm: 150 }])
-    editor.removeItems([added.id])
+    const added = editor.addItem({ tick: 10, bpm: 120 })
+    editor.updateItem({ ...added, tick: 20, bpm: 150 })
+    editor.removeItem(added.id)
 
     expect(editor.getItems()).toStrictEqual([])
   })
@@ -26,9 +26,9 @@ describe("TrackTempoEditor", () => {
     const listener = vi.fn()
     const unsubscribe = editor.observeItems(listener)
 
-    editor.addItems([{ tick: 10, bpm: 120 }])
+    editor.addItem({ tick: 10, bpm: 120 })
     unsubscribe()
-    editor.addItems([{ tick: 20, bpm: 150 }])
+    editor.addItem({ tick: 20, bpm: 150 })
 
     expect(listener).toHaveBeenCalledTimes(1)
   })

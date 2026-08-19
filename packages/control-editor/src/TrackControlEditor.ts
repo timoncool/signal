@@ -4,7 +4,7 @@ import {
   getEventById,
   Track,
   TrackEvent,
-  updateEvents as updateTrackEvents,
+  updateEvent,
 } from "@signal-app/core"
 import { Unsubscribe } from "@signal-app/observable"
 import { ControlEvent } from "./entities/ControlEvent"
@@ -49,12 +49,12 @@ export class TrackControlEditor
     return controlEventToItem(event)
   }
 
-  removeItems = (ids: readonly number[]): void => {
-    this.track.removeEvents(ids)
+  removeItem = (id: number): void => {
+    this.track.removeEvent(id)
   }
 
-  updateItems = (items: readonly ControlItem[]): void => {
-    this.track.mutate(updateTrackEvents(items))
+  updateItem = (item: ControlItem): void => {
+    this.track.mutate(updateEvent(item.id, item))
   }
 
   observeItems = (listener: () => void): Unsubscribe =>

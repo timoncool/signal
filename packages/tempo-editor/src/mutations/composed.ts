@@ -1,13 +1,10 @@
-import {
-  closedRange,
-  interpolate,
-  moveTempoItem,
-  Range,
-  TempoItem,
-} from "@signal-app/core"
+import { closedRange, interpolate, Range } from "@signal-app/core"
 import { max, min } from "lodash"
+import { TempoItem } from "../entities"
 import { ClipboardData } from "../entities/clipboardTypes"
-import { getItemsByIds, listItems } from "../queries/items"
+import { moveTempoItem } from "../entities/tempo/transform"
+import { getItemById, getItems } from "../queries"
+import { getItemsByIds } from "../queries/items"
 import { addItem, removeItem, updateItem } from "./primitives"
 import { TempoEditorMutator } from "./type"
 
@@ -17,7 +14,7 @@ const createOrUpdateItems =
   ): TempoEditorMutator<readonly TempoItem[]> =>
   (context) => {
     const existingByTick = new Map<number, TempoItem[]>()
-    listItems(context).forEach((item) => {
+    getItems()(context).forEach((item) => {
       const existing = existingByTick.get(item.tick) ?? []
       existing.push(item)
       existingByTick.set(item.tick, existing)
@@ -73,16 +70,16 @@ export const duplicateItems =
     )(context).map((item) => item.id)
   }
 
-export const pasteItemsAtPosition =
-  (data: ClipboardData, tick: number): TempoEditorMutator<void> =>
-  (context) => {
-    createOrUpdateItems(
-      data.items.map(({ id: _, ...item }) => ({
-        ...item,
-        tick: Math.max(0, Math.floor(item.tick + tick)),
-      })),
-    )(context)
-  }
+export const pasteItemsAtPosition = (
+  data: ClipboardData,
+  tick: number,
+): TempoEditorMutator<void> =>
+  createOrUpdateItems(
+    data.items.map(({ id: _, ...item }) => ({
+      ...item,
+      tick: Math.max(0, Math.floor(item.tick + tick)),
+    })),
+  )
 
 export const moveItems =
   (
@@ -108,18 +105,18 @@ export const removeRedundantItems =
       }
     })
 
-    const idsToRemove = listItems(context).flatMap((item) => {
+    const idsToRemove = getItems()(context).flatMap((item) => {
       const sourceId = sourceIdByTick.get(item.tick)
       return sourceId === undefined || sourceId === item.id ? [] : [item.id]
     })
     idsToRemove.forEach((id) => removeItem(id)(context))
   }
 
-export const createOrUpdateItem =
-  (tick: number, bpm: number): TempoEditorMutator<void> =>
-  (context) => {
-    createOrUpdateItems([{ tick: Math.max(0, Math.floor(tick)), bpm }])(context)
-  }
+export const createOrUpdateItem = (
+  tick: number,
+  bpm: number,
+): TempoEditorMutator<void> =>
+  createOrUpdateItems([{ tick: Math.max(0, Math.floor(tick)), bpm }])
 
 export const updateItemsInRange =
   (
@@ -135,7 +132,7 @@ export const updateItemsInRange =
     const eventUpdateStartTick = Math.min(startTick, quantizedStartTick)
     const eventUpdateEndTick = Math.max(endTick, quantizedEndTick)
 
-    const idsToRemove = listItems(context).flatMap((item) =>
+    const idsToRemove = getItems()(context).flatMap((item) =>
       item.tick === startTick ||
       item.tick < eventUpdateStartTick ||
       item.tick > eventUpdateEndTick
@@ -159,7 +156,7 @@ export const updateItemsInRange =
 export const setBpm =
   (id: number, bpm: number): TempoEditorMutator<void> =>
   (context) => {
-    const item = getItemsByIds([id])(context)[0]
+    const item = getItemById(id)(context)
     if (item !== undefined) {
       updateItem({ ...item, bpm })(context)
     }

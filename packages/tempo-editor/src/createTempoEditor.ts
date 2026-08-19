@@ -12,9 +12,9 @@ import {
 } from "./mutations"
 import {
   getEventIdsInRange,
+  getItems,
   getItemsByIds,
   getItemsClipboardData,
-  listItems,
   TempoEditorQuery,
 } from "./queries"
 import { TrackTempoEditor } from "./TrackTempoEditor"
@@ -41,7 +41,7 @@ export const createTempoEditor = (conductorTrack: Track) => {
 
     // queries
 
-    listItems: bindQuery(() => listItems),
+    listItems: bindQuery(getItems),
     getItemsByIds: bindQuery(getItemsByIds),
     getEventIdsInRange: bindQuery(getEventIdsInRange),
     getItemsClipboardData: bindQuery(getItemsClipboardData),

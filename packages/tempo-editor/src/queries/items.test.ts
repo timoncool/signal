@@ -5,17 +5,17 @@ import {
   getEventIdsInRange,
   getItemsByIds,
   getItemsClipboardData,
-  listItems,
 } from "./items"
+import { getItems } from "./primitives"
 
 describe("tempo editor queries", () => {
-  it("listItems lists all items", () => {
+  it("getItems lists all items", () => {
     const editor = createTrackTempoEditor([
       { tick: 10, bpm: 120 },
       { tick: 20, bpm: 150 },
     ])
 
-    expect(listItems(editor)).toEqual(editor.getItems())
+    expect(getItems()(editor)).toEqual(editor.getItems())
   })
 
   it("getItemsByIds returns items in the requested id order", () => {

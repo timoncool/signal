@@ -36,7 +36,7 @@ describe("control editor composed mutations", () => {
     const editor = createTrackControlEditor()
     const source = editor.addItem({ tick: 10, value: 64 })
     const other = editor.addItem({ tick: 30, value: 100 })
-    editor.updateItems([{ ...other, tick: 10 }])
+    editor.updateItem({ ...other, tick: 10 })
 
     removeRedundantItems([source.id])(editor)
 

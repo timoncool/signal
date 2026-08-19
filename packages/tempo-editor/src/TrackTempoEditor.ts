@@ -1,18 +1,10 @@
-import {
-  getTempoItemById,
-  getTempoItems,
-  isSetTempoEvent,
-  setTempoEventToTempoItem,
-  TempoItem,
-  Track,
-  TrackEventOf,
-  tempoItemToSetTempoEvent,
-  updateEvents,
-} from "@signal-app/core"
+import { isSetTempoEvent, Track } from "@signal-app/core"
 import { Unsubscribe } from "@signal-app/observable"
-import { SetTempoEvent } from "midifile-ts"
+import { TempoItem } from "./entities"
 import { MutableTempoEditor } from "./mutations/primitives"
 import { QueryTempoEditor } from "./queries/primitives"
+import { addTempoItem, updateTempoItems } from "./trackMutations/tempo"
+import { getTempoItemById, getTempoItems } from "./trackQueries/tempo"
 
 export class TrackTempoEditor implements QueryTempoEditor, MutableTempoEditor {
   constructor(private readonly conductorTrack: Track) {}
@@ -23,26 +15,15 @@ export class TrackTempoEditor implements QueryTempoEditor, MutableTempoEditor {
   getById = (id: number): TempoItem | undefined =>
     this.conductorTrack.query(getTempoItemById(id))
 
-  addItems = (items: readonly Omit<TempoItem, "id">[]): TempoItem[] =>
-    this.conductorTrack
-      .addEvents<TrackEventOf<SetTempoEvent>>(
-        items.map((item) =>
-          tempoItemToSetTempoEvent({
-            id: 0,
-            ...item,
-          }),
-        ),
-      )
-      .map(setTempoEventToTempoItem)
+  addItem = (item: Omit<TempoItem, "id">): TempoItem =>
+    this.conductorTrack.mutate(addTempoItem(item))
 
-  removeItems = (ids: readonly number[]): void => {
-    this.conductorTrack.removeEvents(ids)
+  removeItem = (id: number): void => {
+    this.conductorTrack.removeEvent(id)
   }
 
-  updateItems = (items: readonly TempoItem[]): void =>
-    this.conductorTrack.mutate(
-      updateEvents(items.map(tempoItemToSetTempoEvent)),
-    )
+  updateItem = (item: TempoItem): void =>
+    this.conductorTrack.mutate(updateTempoItems([item]))
 
   observeItems = (listener: () => void): Unsubscribe =>
     this.conductorTrack.subscribeEventsChanged(isSetTempoEvent, listener)

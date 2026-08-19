@@ -11,10 +11,10 @@ describe("TrackControlEditor", () => {
     expect(editor.getById(added.id)).toStrictEqual(added)
     expect(editor.getItems()).toContainEqual(added)
 
-    editor.updateItems([{ ...added, value: 100 }])
+    editor.updateItem({ ...added, value: 100 })
     expect(editor.getById(added.id)?.value).toBe(100)
 
-    editor.removeItems([added.id])
+    editor.removeItem(added.id)
     expect(editor.getItems()).toStrictEqual([])
   })
 
