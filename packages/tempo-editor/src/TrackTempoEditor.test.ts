@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from "vitest"
-import { listItems } from "./queries/items"
 import { createTrackTempoEditor } from "./testUtils"
 
 describe("TrackTempoEditor", () => {
@@ -20,14 +19,6 @@ describe("TrackTempoEditor", () => {
     editor.removeItems([added.id])
 
     expect(editor.getItems()).toStrictEqual([])
-  })
-
-  it("applies queries and mutators", () => {
-    const editor = createTrackTempoEditor()
-
-    expect(editor.query(() => "query result")).toBe("query result")
-    expect(editor.mutate(() => "mutation result")).toBe("mutation result")
-    expect(editor.query(listItems)).toEqual(editor.getItems())
   })
 
   it("observes tempo item changes", () => {

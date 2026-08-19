@@ -1,9 +1,5 @@
 import { Range } from "@signal-app/core"
 import { Point } from "@signal-app/geometry"
-import {
-  createOrUpdateItem,
-  updateItemsInRange,
-} from "@signal-app/tempo-editor"
 import { useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
 import { getClientPos } from "../../../helpers/mouseEvent"
@@ -15,11 +11,17 @@ import { useTempoEditorService } from "./useTempoEditor"
 
 const useUpdateTempoEventsInRange = () => {
   const { quantizeFloor, quantizeUnit } = useQuantizer()
+  const tempoEditor = useTempoEditorService()
 
   return useCallback(
     (valueRange: Range, tickRange: Range) =>
-      updateItemsInRange(valueRange, tickRange, quantizeFloor, quantizeUnit),
-    [quantizeFloor, quantizeUnit],
+      tempoEditor.updateItemsInRange(
+        valueRange,
+        tickRange,
+        quantizeFloor,
+        quantizeUnit,
+      ),
+    [tempoEditor, quantizeFloor, quantizeUnit],
   )
 }
 
@@ -37,7 +39,7 @@ export const usePencilGesture = (): MouseDownHandler<
 
       const startClientPos = getClientPos(e)
       const pos = transform.fromPosition(startPoint)
-      tempoEditor.mutate(createOrUpdateItem(quantizeRound(pos.tick), pos.bpm))
+      tempoEditor.createOrUpdateItem(quantizeRound(pos.tick), pos.bpm)
 
       let lastTick = pos.tick
       let lastValue = pos.bpm
@@ -52,11 +54,9 @@ export const usePencilGesture = (): MouseDownHandler<
             Math.min(transform.maxBPM, transform.fromPosition(local).bpm),
           )
           const tick = transform.getTick(local.x)
-          tempoEditor.mutate(
-            updateTempoEventsInRange(
-              Range.fromUnordered(lastValue, value),
-              Range.fromUnordered(lastTick, tick),
-            ),
+          updateTempoEventsInRange(
+            Range.fromUnordered(lastValue, value),
+            Range.fromUnordered(lastTick, tick),
           )
 
           lastTick = tick

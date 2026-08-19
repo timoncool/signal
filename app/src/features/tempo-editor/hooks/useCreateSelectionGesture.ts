@@ -1,6 +1,5 @@
 import { Range } from "@signal-app/core"
 import { Point } from "@signal-app/geometry"
-import { getEventIdsInRange } from "@signal-app/tempo-editor"
 import { useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
 import { getClientPos } from "../../../helpers/mouseEvent"
@@ -44,7 +43,7 @@ export const useCreateSelectionGesture = (): MouseDownHandler<
             return
           }
           const range = Range.create(selection.fromTick, selection.toTick)
-          setSelectedEventIds(tempoEditor.query(getEventIdsInRange(range)))
+          setSelectedEventIds(tempoEditor.getEventIdsInRange(range))
           setSelection(null)
         },
       })

@@ -1,10 +1,4 @@
-import {
-  ClipboardDataSchema,
-  duplicateItems,
-  getItemsClipboardData,
-  pasteItemsAtPosition,
-  removeItems,
-} from "@signal-app/tempo-editor"
+import { ClipboardDataSchema } from "@signal-app/tempo-editor"
 import { useCallback } from "react"
 import { useHistory } from "../../../hooks/useHistory"
 import { usePlayer } from "../../../hooks/usePlayer"
@@ -27,7 +21,7 @@ export const useDeleteTempoSelection = () => {
 
     pushHistory()
 
-    tempoEditor.mutate(removeItems(selectedEventIds))
+    tempoEditor.removeItems(selectedEventIds)
     setSelection(null)
   }
 }
@@ -37,7 +31,7 @@ export const useCopyTempoSelection = () => {
   const { selectedEventIds } = useTempoEditor()
 
   return useCallback(async () => {
-    const data = tempoEditor.query(getItemsClipboardData(selectedEventIds))
+    const data = tempoEditor.getItemsClipboardData(selectedEventIds)
     if (!data) {
       return
     }
@@ -60,7 +54,7 @@ export const usePasteTempoSelection = () => {
       }
 
       pushHistory()
-      tempoEditor.mutate(pasteItemsAtPosition(data, position))
+      tempoEditor.pasteItemsAtPosition(data, position)
     },
     [pushHistory, tempoEditor, position],
   )
@@ -88,7 +82,7 @@ export const useDuplicateTempoSelection = () => {
 
     pushHistory()
 
-    const addedEventIds = tempoEditor.mutate(duplicateItems(selectedEventIds))
+    const addedEventIds = tempoEditor.duplicateItems(selectedEventIds)
 
     // select the created events
     setSelectedEventIds(addedEventIds)

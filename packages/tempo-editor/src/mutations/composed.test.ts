@@ -21,7 +21,7 @@ describe("tempo editor composed mutations", () => {
     ])
     const [first] = editor.getItems()
 
-    editor.mutate(removeItems([first.id]))
+    removeItems([first.id])(editor)
 
     expect(editor.getItems()).toMatchObject([{ tick: 20, bpm: 150 }])
   })
@@ -33,11 +33,9 @@ describe("tempo editor composed mutations", () => {
     ])
     const selected = editor.getItems()
 
-    const addedIds = editor.mutate(
-      duplicateItems(selected.map((item) => item.id)),
-    )
+    const addedIds = duplicateItems(selected.map((item) => item.id))(editor)
 
-    expect(editor.query(getItemsByIds(addedIds))).toMatchObject([
+    expect(getItemsByIds(addedIds)(editor)).toMatchObject([
       { tick: 20, bpm: 100 },
       { tick: 30, bpm: 200 },
     ])
@@ -46,18 +44,16 @@ describe("tempo editor composed mutations", () => {
   it("pastes clipboard items at the target tick", () => {
     const editor = createTrackTempoEditor()
 
-    editor.mutate(
-      pasteItemsAtPosition(
-        {
-          type: "tempo_events",
-          items: [
-            { id: 1, tick: 0, bpm: 120 },
-            { id: 2, tick: 20, bpm: 150 },
-          ],
-        },
-        60,
-      ),
-    )
+    pasteItemsAtPosition(
+      {
+        type: "tempo_events",
+        items: [
+          { id: 1, tick: 0, bpm: 120 },
+          { id: 2, tick: 20, bpm: 150 },
+        ],
+      },
+      60,
+    )(editor)
 
     expect(editor.getItems()).toMatchObject([
       { tick: 60, bpm: 120 },
@@ -72,14 +68,12 @@ describe("tempo editor composed mutations", () => {
     ])
     const selected = editor.getItems()
 
-    editor.mutate(
-      moveItems(
-        selected.map((item) => item.id),
-        -20,
-        30,
-        200,
-      ),
-    )
+    moveItems(
+      selected.map((item) => item.id),
+      -20,
+      30,
+      200,
+    )(editor)
 
     expect(editor.getItems()).toMatchObject([
       { tick: 0, bpm: 150 },
@@ -95,7 +89,7 @@ describe("tempo editor composed mutations", () => {
     const [source] = editor.getItems()
     editor.addItems([{ tick: source.tick, bpm: 160 }])
 
-    editor.mutate(removeRedundantItems([source.id]))
+    removeRedundantItems([source.id])(editor)
 
     expect(editor.getItems()).toMatchObject([
       { id: source.id, tick: 10, bpm: 120 },
@@ -106,8 +100,8 @@ describe("tempo editor composed mutations", () => {
   it("creates an item or updates all items at the same tick", () => {
     const editor = createTrackTempoEditor([{ tick: 10, bpm: 120 }])
 
-    editor.mutate(createOrUpdateItem(10, 150))
-    editor.mutate(createOrUpdateItem(20, 200))
+    createOrUpdateItem(10, 150)(editor)
+    createOrUpdateItem(20, 200)(editor)
 
     expect(editor.getItems()).toMatchObject([
       { tick: 10, bpm: 150 },
@@ -122,14 +116,12 @@ describe("tempo editor composed mutations", () => {
       { tick: 20, bpm: 50 },
     ])
 
-    editor.mutate(
-      updateItemsInRange(
-        Range.create(100, 200),
-        Range.create(0, 20),
-        (tick) => tick,
-        10,
-      ),
-    )
+    updateItemsInRange(
+      Range.create(100, 200),
+      Range.create(0, 20),
+      (tick) => tick,
+      10,
+    )(editor)
 
     expect(editor.getItems()).toMatchObject([
       { tick: 0, bpm: 100 },
@@ -142,8 +134,8 @@ describe("tempo editor composed mutations", () => {
     const editor = createTrackTempoEditor([{ tick: 10, bpm: 120 }])
     const [item] = editor.getItems()
 
-    editor.mutate(setBpm(item.id, 150))
-    editor.mutate(setBpm(-1, 180))
+    setBpm(item.id, 150)(editor)
+    setBpm(-1, 180)(editor)
 
     expect(editor.getItems()).toMatchObject([{ tick: 10, bpm: 150 }])
   })

@@ -6,7 +6,7 @@ describe("tempo editor primitive mutations", () => {
   it("adds an item", () => {
     const editor = createTrackTempoEditor()
 
-    const added = editor.mutate(addItem({ tick: 10, bpm: 120 }))
+    const added = addItem({ tick: 10, bpm: 120 })(editor)
 
     expect(added).toMatchObject({ tick: 10, bpm: 120 })
     expect(editor.getItems()).toMatchObject([{ tick: 10, bpm: 120 }])
@@ -16,7 +16,7 @@ describe("tempo editor primitive mutations", () => {
     const editor = createTrackTempoEditor([{ tick: 10, bpm: 120 }])
     const [item] = editor.getItems()
 
-    editor.mutate(removeItem(item.id))
+    removeItem(item.id)(editor)
 
     expect(editor.getItems()).toStrictEqual([])
   })
@@ -25,7 +25,7 @@ describe("tempo editor primitive mutations", () => {
     const editor = createTrackTempoEditor([{ tick: 10, bpm: 120 }])
     const [item] = editor.getItems()
 
-    editor.mutate(updateItem({ ...item, tick: 20, bpm: 150 }))
+    updateItem({ ...item, tick: 20, bpm: 150 })(editor)
 
     expect(editor.getItems()).toMatchObject([
       { id: item.id, tick: 20, bpm: 150 },

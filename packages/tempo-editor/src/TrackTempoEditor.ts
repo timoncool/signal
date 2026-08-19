@@ -11,11 +11,10 @@ import {
 } from "@signal-app/core"
 import { Unsubscribe } from "@signal-app/observable"
 import { SetTempoEvent } from "midifile-ts"
-import { TempoEditorMutator } from "./mutations/type"
-import { TempoEditorQuery } from "./queries/type"
-import { TempoEditor } from "./type"
+import { MutableTempoEditor } from "./mutations/primitives"
+import { QueryTempoEditor } from "./queries/primitives"
 
-export class TrackTempoEditor implements TempoEditor {
+export class TrackTempoEditor implements QueryTempoEditor, MutableTempoEditor {
   constructor(private readonly conductorTrack: Track) {}
 
   getItems = (): readonly TempoItem[] =>
@@ -47,9 +46,4 @@ export class TrackTempoEditor implements TempoEditor {
 
   observeItems = (listener: () => void): Unsubscribe =>
     this.conductorTrack.subscribeEventsChanged(isSetTempoEvent, listener)
-
-  query = <R>(fn: TempoEditorQuery<R>): R => fn(this)
-
-  mutate = <R = void>(fn: TempoEditorMutator<R>): R =>
-    this.conductorTrack.transaction(() => fn(this))
 }

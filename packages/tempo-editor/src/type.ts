@@ -1,9 +1,3 @@
-import { Unsubscribe } from "@signal-app/observable"
-import { TempoEditorMutator } from "./mutations/type"
-import { TempoEditorQuery } from "./queries/type"
+import type { createTempoEditor } from "./createTempoEditor"
 
-export interface TempoEditor {
-  observeItems: (listener: () => void) => Unsubscribe
-  query: <R>(fn: TempoEditorQuery<R>) => R
-  mutate: <R = void>(fn: TempoEditorMutator<R>) => R
-}
+export type TempoEditor = ReturnType<typeof createTempoEditor>

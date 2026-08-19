@@ -1,7 +1,7 @@
 import { TempoItem } from "@signal-app/core"
 import { TempoEditorQuery, TempoEditorQueryContext } from "./type"
 
-type QueryTempoEditor = {
+export interface QueryTempoEditor {
   getItems: () => readonly TempoItem[]
   getById: (id: number) => TempoItem | undefined
 }

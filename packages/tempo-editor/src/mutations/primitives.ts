@@ -1,7 +1,7 @@
 import { TempoItem } from "@signal-app/core"
 import { TempoEditorMutator, TempoEditorMutatorContext } from "./type"
 
-type MutableTempoEditor = {
+export interface MutableTempoEditor {
   addItems: (items: readonly Omit<TempoItem, "id">[]) => TempoItem[]
   removeItems: (ids: readonly number[]) => void
   updateItems: (items: readonly TempoItem[]) => void

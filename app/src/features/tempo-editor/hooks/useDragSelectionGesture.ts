@@ -1,9 +1,4 @@
 import { Point } from "@signal-app/geometry"
-import {
-  getItemsByIds,
-  moveItems,
-  removeRedundantItems,
-} from "@signal-app/tempo-editor"
 import { useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
 import { getClientPos } from "../../../helpers/mouseEvent"
@@ -32,7 +27,7 @@ export const useDragSelectionGesture = (): MouseDownHandler<[number]> => {
         setSelectedEventIds(selectedEventIds)
       }
 
-      const events = tempoEditor.query(getItemsByIds(selectedEventIds))
+      const events = tempoEditor.getItemsByIds(selectedEventIds)
 
       const draggedEvent = events.find((ev) => ev.id === hitEventId)
       if (draggedEvent === undefined) {
@@ -59,20 +54,18 @@ export const useDragSelectionGesture = (): MouseDownHandler<[number]> => {
 
           const deltaValue = pos.bpm - start.bpm
 
-          tempoEditor.mutate(
-            moveItems(
-              selectedEventIds,
-              quantizedDeltaTick - lastDeltaTick,
-              deltaValue - lastDeltaValue,
-              transform.maxBPM,
-            ),
+          tempoEditor.moveItems(
+            selectedEventIds,
+            quantizedDeltaTick - lastDeltaTick,
+            deltaValue - lastDeltaValue,
+            transform.maxBPM,
           )
 
           lastDeltaTick = quantizedDeltaTick
           lastDeltaValue = deltaValue
         },
         onMouseUp: () => {
-          tempoEditor.mutate(removeRedundantItems(selectedEventIds))
+          tempoEditor.removeRedundantItems(selectedEventIds)
         },
       })
     },
