@@ -1,11 +1,4 @@
-import {
-  ClipboardDataSchema,
-  createOrUpdateItemValue,
-  duplicateItems,
-  pasteItemsAtPosition,
-  removeItems,
-  ValueEventType,
-} from "@signal-app/control-editor"
+import { ClipboardDataSchema, ValueEventType } from "@signal-app/control-editor"
 import { useCallback } from "react"
 import { useHistory } from "../../../hooks/useHistory"
 import { usePlayer } from "../../../hooks/usePlayer"
@@ -27,9 +20,7 @@ export const useCreateOrUpdateControlEventsValue = () => {
     (value: number) => {
       pushHistory()
 
-      controlEditor.mutate(
-        createOrUpdateItemValue(selectedEventIds, value, position),
-      )
+      controlEditor.createOrUpdateItemValue(selectedEventIds, value, position)
     },
     [selectedEventIds, controlEditor, position, pushHistory],
   )
@@ -47,7 +38,7 @@ export const useDeleteControlSelection = () => {
 
     pushHistory()
 
-    controlEditor.mutate(removeItems(selectedEventIds))
+    controlEditor.removeItems(selectedEventIds)
     setSelection(null)
   }, [selectedEventIds, controlEditor, pushHistory, setSelection])
 }
@@ -87,7 +78,7 @@ export const usePasteControlSelection = () => {
       }
 
       pushHistory()
-      controlEditor.mutate(pasteItemsAtPosition(data, position))
+      controlEditor.pasteItemsAtPosition(data, position)
     },
     [controlEditor, position, pushHistory],
   )
@@ -116,7 +107,7 @@ export const useDuplicateControlSelection = () => {
     pushHistory()
 
     // select the created events
-    const addedEventIds = controlEditor.mutate(duplicateItems(selectedEventIds))
+    const addedEventIds = controlEditor.duplicateItems(selectedEventIds)
     setSelectedEventIds([...addedEventIds])
   }, [selectedEventIds, controlEditor, pushHistory, setSelectedEventIds])
 }

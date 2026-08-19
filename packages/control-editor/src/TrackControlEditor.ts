@@ -12,15 +12,9 @@ import { ControlItem } from "./entities/ControlItem"
 import { controlEventToItem } from "./entities/transform"
 import { ValueEventType } from "./entities/ValueEventType"
 import { ControlEditorMutator } from "./mutations/type"
-import {
-  getItemsByIds,
-  getItemsClipboardData,
-  getItemsInRangeWithPrevious,
-} from "./queries"
 import { ControlEditorQuery } from "./queries/type"
-import { ControlEditor } from "./type"
 
-export class TrackControlEditor implements ControlEditor {
+export class TrackControlEditor {
   private readonly predicate: (e: TrackEvent) => e is ControlEvent
   private readonly factory: ReturnType<typeof ValueEventType.getEventFactory>
 
@@ -43,17 +37,15 @@ export class TrackControlEditor implements ControlEditor {
       : undefined
   }
 
-  addItems = (items: readonly Omit<ControlItem, "id">[]): ControlItem[] =>
-    this.track
-      .mutate((events) =>
-        items.map((item) =>
-          createOrUpdateTrackEvent<ControlEvent>({
-            ...this.factory(item.value),
-            tick: item.tick,
-          })(events),
-        ),
-      )
-      .map(controlEventToItem)
+  addItem = (item: Omit<ControlItem, "id">): ControlItem => {
+    const event = this.track.mutate(
+      createOrUpdateTrackEvent<ControlEvent>({
+        ...this.factory(item.value),
+        tick: item.tick,
+      }),
+    )
+    return controlEventToItem(event)
+  }
 
   removeItems = (ids: readonly number[]): void => {
     this.track.removeEvents(ids)
@@ -72,17 +64,4 @@ export class TrackControlEditor implements ControlEditor {
 
   mutate = <R = void>(fn: ControlEditorMutator<R>): R =>
     this.track.transaction(() => fn(this))
-
-  private bindQuery =
-    <A extends unknown[], R>(
-      fn: (...args: A) => ControlEditorQuery<R>,
-    ): ((...args: A) => R) =>
-    (...args: A) =>
-      fn(...args)(this)
-
-  // facade methods
-
-  getItemsByIds = this.bindQuery(getItemsByIds)
-  getItemsClipboardData = this.bindQuery(getItemsClipboardData)
-  getItemsInRangeWithPrevious = this.bindQuery(getItemsInRangeWithPrevious)
 }

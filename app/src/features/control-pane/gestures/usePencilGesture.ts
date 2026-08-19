@@ -1,4 +1,3 @@
-import { addItem, updateItemsInRange } from "@signal-app/control-editor"
 import { Range } from "@signal-app/core"
 import { Point } from "@signal-app/geometry"
 import { useCallback } from "react"
@@ -15,11 +14,17 @@ import { useControlPane } from "../hooks/useControlPane"
 
 const useUpdateValueEvents = () => {
   const { quantizeFloor, quantizeUnit } = useQuantizer()
+  const controlEditor = useControlEditor()
 
   return useCallback(
     (valueRange: Range, tickRange: Range) =>
-      updateItemsInRange(valueRange, tickRange, quantizeFloor, quantizeUnit),
-    [quantizeFloor, quantizeUnit],
+      controlEditor.updateItemsInRange(
+        valueRange,
+        tickRange,
+        quantizeFloor,
+        quantizeUnit,
+      ),
+    [controlEditor, quantizeFloor, quantizeUnit],
   )
 }
 
@@ -46,7 +51,7 @@ export const usePencilGesture = (): MouseDownHandler<
       const startClientPos = getClientPos(e)
       const pos = transform.fromPosition(startPoint)
 
-      controlEditor.mutate(addItem({ tick: pos.tick, value: pos.value }))
+      controlEditor.addItem({ tick: pos.tick, value: pos.value })
       sendEvent(controlEditor.createPreviewEvent(pos.value))
 
       let lastTick = pos.tick
@@ -63,11 +68,9 @@ export const usePencilGesture = (): MouseDownHandler<
           )
           const tick = transform.getTick(local.x)
 
-          controlEditor.mutate(
-            updateValueEvents(
-              Range.fromUnordered(lastValue, value),
-              Range.fromUnordered(lastTick, tick),
-            ),
+          updateValueEvents(
+            Range.fromUnordered(lastValue, value),
+            Range.fromUnordered(lastTick, tick),
           )
 
           lastTick = tick

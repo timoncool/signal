@@ -1,4 +1,3 @@
-import { moveItems, removeRedundantItems } from "@signal-app/control-editor"
 import { Point } from "@signal-app/geometry"
 import { useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
@@ -57,13 +56,11 @@ export const useDragSelectionGesture = (): MouseDownHandler<
           const currentValue = transform.getValue(startPoint.y + delta.y)
           const deltaValue = currentValue - startValue
 
-          controlEditor.mutate(
-            moveItems(
-              selectedEventIds,
-              quantizedDeltaTick - lastDeltaTick,
-              deltaValue - lastDeltaValue,
-              transform.maxValue,
-            ),
+          controlEditor.moveItems(
+            selectedEventIds,
+            quantizedDeltaTick - lastDeltaTick,
+            deltaValue - lastDeltaValue,
+            transform.maxValue,
           )
 
           lastDeltaTick = quantizedDeltaTick
@@ -72,7 +69,7 @@ export const useDragSelectionGesture = (): MouseDownHandler<
 
         onMouseUp: () => {
           // Find events with the same tick and remove it
-          controlEditor.mutate(removeRedundantItems(selectedEventIds))
+          controlEditor.removeRedundantItems(selectedEventIds)
         },
       })
     },

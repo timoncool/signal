@@ -2,7 +2,7 @@ import { ControlItem } from "../entities/ControlItem"
 import { ControlEditorMutator, ControlEditorMutatorContext } from "./type"
 
 type MutableControlEditor = {
-  addItems: (items: readonly Omit<ControlItem, "id">[]) => ControlItem[]
+  addItem: (item: Omit<ControlItem, "id">) => ControlItem
   removeItems: (ids: readonly number[]) => void
   updateItems: (items: readonly ControlItem[]) => void
 }
@@ -12,11 +12,9 @@ const asMutableControlEditor = (
 ): MutableControlEditor => context as unknown as MutableControlEditor
 
 export const addItem =
-  (
-    item: Omit<ControlItem, "id">,
-  ): ControlEditorMutator<ControlItem | undefined> =>
+  (item: Omit<ControlItem, "id">): ControlEditorMutator<ControlItem> =>
   (context) =>
-    asMutableControlEditor(context).addItems([item])[0]
+    asMutableControlEditor(context).addItem(item)
 
 export const removeItem =
   (id: number): ControlEditorMutator<void> =>
