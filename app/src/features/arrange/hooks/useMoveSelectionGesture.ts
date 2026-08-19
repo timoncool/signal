@@ -6,7 +6,6 @@ import { getClientPos } from "../../../helpers/mouseEvent"
 import { observeDrag } from "../../../helpers/observeDrag"
 import { useHistory } from "../../../hooks/useHistory"
 import { useQuantizer } from "../../../hooks/useQuantizer"
-import { useSong } from "../../../hooks/useSong"
 import { useArrangeEditor } from "./useArrangeEditor"
 import { useArrangeTransform } from "./useArrangeTransform"
 import { useArrangeView } from "./useArrangeView"
@@ -19,7 +18,6 @@ export const useMoveSelectionGesture = (): MouseDownHandler<
   const { selection: _selection, setSelection } = useArrangeView()
   const { trackTransform } = useArrangeTransform()
   const { quantizeRound } = useQuantizer()
-  const { tracks } = useSong()
   const arrangeEditor = useArrangeEditor()
 
   return useCallback(
@@ -56,7 +54,8 @@ export const useMoveSelectionGesture = (): MouseDownHandler<
           // clamp
           point = ArrangePoint.clamp(
             point,
-            tracks.length - (selection.toTrackIndex - selection.fromTrackIndex),
+            arrangeEditor.getTrackCount() -
+              (selection.toTrackIndex - selection.fromTrackIndex),
           )
 
           const delta = ArrangePoint.sub(
@@ -81,7 +80,6 @@ export const useMoveSelectionGesture = (): MouseDownHandler<
       pushHistory,
       quantizeRound,
       trackTransform,
-      tracks,
       setSelection,
       _selection,
       arrangeEditor,

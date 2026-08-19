@@ -76,6 +76,11 @@ export class SongArrangeEditor
     this.tracks[trackIndex]?.updateEvent(id, update)
   }
 
+  // Track-list changes only. observeItems also fires on every event change,
+  // which would re-render track-count consumers on each note edit.
+  observeTrackCount = (listener: () => void): Unsubscribe =>
+    this.song.onTracksChanged.subscribe(listener)
+
   observeItems = (listener: () => void): Unsubscribe =>
     combineSubscription([
       this.song.onTracksChanged.subscribe,

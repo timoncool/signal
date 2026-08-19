@@ -12,6 +12,7 @@ import {
   ArrangeEditorQuery,
   getEventIdsInSelection,
   getEventsClipboardData,
+  getTrackCount,
   hasEventsInSelection,
   listNotes,
 } from "./queries"
@@ -39,9 +40,11 @@ export const createArrangeEditor = (song: Song) => {
 
   return {
     observeItems: editor.observeItems,
+    observeTrackCount: editor.observeTrackCount,
 
     // queries
 
+    getTrackCount: bindQuery(() => getTrackCount),
     listNotes: bindQuery(() => listNotes),
     getEventIdsInSelection: bindQuery(getEventIdsInSelection),
     hasEventsInSelection: bindQuery(hasEventsInSelection),

@@ -34,4 +34,28 @@ describe("createArrangeEditor", () => {
     expect(song.tracks[0].events).toHaveLength(0)
     expect(listener).toHaveBeenCalledTimes(1)
   })
+
+  it("getTrackCount reflects the song's tracks, and observeTrackCount fires only on track-list changes", () => {
+    const song = createSong(1)
+    const editor = createArrangeEditor(song)
+    expect(editor.getTrackCount()).toBe(1)
+
+    const listener = vi.fn()
+    const unsubscribe = editor.observeTrackCount(listener)
+
+    // editing events must not notify track-count consumers
+    addNoteToTrack(song.tracks[0], { tick: 10 })
+    expect(listener).not.toHaveBeenCalled()
+
+    const track = new Track()
+    track.channel = 1
+    song.addTrack(track)
+
+    expect(editor.getTrackCount()).toBe(2)
+    expect(listener).toHaveBeenCalledTimes(1)
+
+    unsubscribe()
+    song.addTrack(new Track())
+    expect(listener).toHaveBeenCalledTimes(1)
+  })
 })
