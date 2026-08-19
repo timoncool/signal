@@ -1,4 +1,5 @@
-import { ArrangeSelection, Range } from "@signal-app/core"
+import { ArrangeSelection } from "@signal-app/arrange-editor"
+import { Range } from "@signal-app/core"
 import { MouseEvent, useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
 import { observeDrag } from "../../../helpers/observeDrag"

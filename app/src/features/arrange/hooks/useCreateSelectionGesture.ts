@@ -1,4 +1,4 @@
-import { ArrangePoint, ArrangeSelection } from "@signal-app/core"
+import { ArrangePoint, ArrangeSelection } from "@signal-app/arrange-editor"
 import { Point } from "@signal-app/geometry"
 import { MouseEvent, useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"

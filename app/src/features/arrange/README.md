@@ -27,7 +27,7 @@ Implements arrangement timeline UI and editing interactions.
 ## Libraries and External Factors
 
 - Uses Jotai (`atom`, `useAtomValue`, `useSetAtom`) and lodash cloning for state snapshots.
-- Depends on `@signal-app/core` entities such as `ArrangeSelection`.
+- Note editing goes through `@signal-app/arrange-editor` (`useArrangeEditor`), which also owns the `ArrangeSelection`/`ArrangePoint` entities. Track list operations still use `@signal-app/core`'s `SongCommand`s via `useSongCommand`.
 - Keyboard behavior is split into local and global shortcut hooks for predictable focus handling.
 
 ## State Notes
