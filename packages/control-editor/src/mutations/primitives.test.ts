@@ -6,7 +6,7 @@ describe("control editor primitive mutations", () => {
   it("adds an item", () => {
     const editor = createTrackControlEditor()
 
-    const added = editor.mutate(addItem({ tick: 10, value: 64 }))
+    const added = addItem({ tick: 10, value: 64 })(editor)
 
     expect(added).toMatchObject({ tick: 10, value: 64 })
     expect(editor.getItems()).toMatchObject([{ tick: 10, value: 64 }])
@@ -14,18 +14,18 @@ describe("control editor primitive mutations", () => {
 
   it("removes an item", () => {
     const editor = createTrackControlEditor()
-    const [item] = editor.addItems([{ tick: 10, value: 64 }])
+    const item = editor.addItem({ tick: 10, value: 64 })
 
-    editor.mutate(removeItem(item.id))
+    removeItem(item.id)(editor)
 
     expect(editor.getItems()).toStrictEqual([])
   })
 
   it("updates an item", () => {
     const editor = createTrackControlEditor()
-    const [item] = editor.addItems([{ tick: 10, value: 64 }])
+    const item = editor.addItem({ tick: 10, value: 64 })
 
-    editor.mutate(updateItem({ ...item, tick: 20, value: 100 }))
+    updateItem({ ...item, tick: 20, value: 100 })(editor)
 
     expect(editor.getItems()).toMatchObject([
       { id: item.id, tick: 20, value: 100 },

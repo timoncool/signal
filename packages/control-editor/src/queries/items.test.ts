@@ -10,24 +10,21 @@ import {
 describe("control editor composed queries", () => {
   it("listItems lists all items of the editor's type", () => {
     const editor = createTrackControlEditor()
-    editor.addItems([
-      { tick: 10, value: 64 },
-      { tick: 20, value: 100 },
-    ])
+    editor.addItem({ tick: 10, value: 64 })
+    editor.addItem({ tick: 20, value: 100 })
 
-    expect(editor.query(listItems)).toStrictEqual(editor.getItems())
+    expect(listItems(editor)).toStrictEqual(editor.getItems())
   })
 
   it("getItemsByIds returns items for known ids and skips missing ones", () => {
     const editor = createTrackControlEditor()
-    const [first, second] = editor.addItems([
-      { tick: 10, value: 64 },
-      { tick: 20, value: 100 },
-    ])
+    const first = editor.addItem({ tick: 10, value: 64 })
+    const second = editor.addItem({ tick: 20, value: 100 })
 
-    expect(
-      editor.query(getItemsByIds([first.id, -1, second.id])),
-    ).toStrictEqual([first, second])
+    expect(getItemsByIds([first.id, -1, second.id])(editor)).toStrictEqual([
+      first,
+      second,
+    ])
   })
 
   it("getItemsClipboardData normalizes selected items to start at tick 0", () => {
@@ -35,14 +32,10 @@ describe("control editor composed queries", () => {
       type: "controller",
       controllerType: 7,
     })
-    const [first, second] = editor.addItems([
-      { tick: 20, value: 64 },
-      { tick: 40, value: 100 },
-    ])
+    const first = editor.addItem({ tick: 20, value: 64 })
+    const second = editor.addItem({ tick: 40, value: 100 })
 
-    expect(
-      editor.query(getItemsClipboardData([first.id, second.id])),
-    ).toStrictEqual({
+    expect(getItemsClipboardData([first.id, second.id])(editor)).toStrictEqual({
       type: "control_events",
       valueEventType: { type: "controller", controllerType: 7 },
       events: [
@@ -55,27 +48,25 @@ describe("control editor composed queries", () => {
   it("getItemsClipboardData returns null for an empty selection", () => {
     const editor = createTrackControlEditor()
 
-    expect(editor.query(getItemsClipboardData([]))).toBeNull()
+    expect(getItemsClipboardData([])(editor)).toBeNull()
   })
 
   it("getItemsInRangeWithPrevious includes the last item before the range", () => {
     const editor = createTrackControlEditor()
-    editor.addItems([
-      { tick: 0, value: 1 },
-      { tick: 10, value: 2 },
-      { tick: 20, value: 3 },
-    ])
+    editor.addItem({ tick: 0, value: 1 })
+    editor.addItem({ tick: 10, value: 2 })
+    editor.addItem({ tick: 20, value: 3 })
 
-    const items = editor.query(getItemsInRangeWithPrevious([15, 25]))
+    const items = getItemsInRangeWithPrevious([15, 25])(editor)
 
     expect(items.map((item) => item.tick)).toStrictEqual([10, 20])
   })
 
   it("getItemsInRangeWithPrevious omits the previous item when none precedes the range", () => {
     const editor = createTrackControlEditor()
-    editor.addItems([{ tick: 20, value: 3 }])
+    editor.addItem({ tick: 20, value: 3 })
 
-    const items = editor.query(getItemsInRangeWithPrevious([0, 10]))
+    const items = getItemsInRangeWithPrevious([0, 10])(editor)
 
     expect(items).toStrictEqual([])
   })

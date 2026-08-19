@@ -15,44 +15,40 @@ import {
 describe("control editor composed mutations", () => {
   it("removeItems removes selected items", () => {
     const editor = createTrackControlEditor()
-    const [first, second] = editor.addItems([
-      { tick: 10, value: 1 },
-      { tick: 20, value: 2 },
-    ])
+    const first = editor.addItem({ tick: 10, value: 1 })
+    const second = editor.addItem({ tick: 20, value: 2 })
 
-    editor.mutate(removeItems([first.id]))
+    removeItems([first.id])(editor)
 
     expect(editor.getItems()).toMatchObject([{ id: second.id }])
   })
 
   it("moveItems shifts tick and value, clamping the value", () => {
     const editor = createTrackControlEditor()
-    const [added] = editor.addItems([{ tick: 10, value: 64 }])
+    const added = editor.addItem({ tick: 10, value: 64 })
 
-    editor.mutate(moveItems([added.id], 5, 100, 127))
+    moveItems([added.id], 5, 100, 127)(editor)
 
     expect(editor.getById(added.id)).toMatchObject({ tick: 15, value: 127 })
   })
 
   it("removeRedundantItems keeps the source item and removes others at the same tick", () => {
     const editor = createTrackControlEditor()
-    const [source] = editor.addItems([{ tick: 10, value: 64 }])
-    const [other] = editor.addItems([{ tick: 30, value: 100 }])
+    const source = editor.addItem({ tick: 10, value: 64 })
+    const other = editor.addItem({ tick: 30, value: 100 })
     editor.updateItems([{ ...other, tick: 10 }])
 
-    editor.mutate(removeRedundantItems([source.id]))
+    removeRedundantItems([source.id])(editor)
 
     expect(editor.getItems()).toStrictEqual([source])
   })
 
   it("duplicateItems shifts a copy by the selection's tick span", () => {
     const editor = createTrackControlEditor()
-    const [first, second] = editor.addItems([
-      { tick: 10, value: 1 },
-      { tick: 30, value: 2 },
-    ])
+    const first = editor.addItem({ tick: 10, value: 1 })
+    const second = editor.addItem({ tick: 30, value: 2 })
 
-    const newIds = editor.mutate(duplicateItems([first.id, second.id]))
+    const newIds = duplicateItems([first.id, second.id])(editor)
 
     const duplicatedTicks = newIds
       .map((id) => editor.getById(id)?.tick)
@@ -63,19 +59,17 @@ describe("control editor composed mutations", () => {
   it("createOrUpdateItemValue creates a new item when nothing is selected", () => {
     const editor = createTrackControlEditor()
 
-    editor.mutate(createOrUpdateItemValue([], 64, 10))
+    createOrUpdateItemValue([], 64, 10)(editor)
 
     expect(editor.getItems()).toMatchObject([{ tick: 10, value: 64 }])
   })
 
   it("createOrUpdateItemValue updates every selected item's value", () => {
     const editor = createTrackControlEditor()
-    const [first, second] = editor.addItems([
-      { tick: 10, value: 1 },
-      { tick: 20, value: 2 },
-    ])
+    const first = editor.addItem({ tick: 10, value: 1 })
+    const second = editor.addItem({ tick: 20, value: 2 })
 
-    editor.mutate(createOrUpdateItemValue([first.id, second.id], 100, 999))
+    createOrUpdateItemValue([first.id, second.id], 100, 999)(editor)
 
     expect(editor.getItems()).toMatchObject([
       { tick: 10, value: 100 },
@@ -89,15 +83,13 @@ describe("control editor composed mutations", () => {
     const quantizeFloor = (tick: number) =>
       Math.floor(tick / quantizeUnit) * quantizeUnit
 
-    editor.mutate(
-      updateItemsInRangeWithEasing(
-        [0, 100],
-        [0, 20],
-        quantizeFloor,
-        quantizeUnit,
-        (t) => t * t,
-      ),
-    )
+    updateItemsInRangeWithEasing(
+      [0, 100],
+      [0, 20],
+      quantizeFloor,
+      quantizeUnit,
+      (t) => t * t,
+    )(editor)
 
     const items = editor
       .getItems()
@@ -117,9 +109,7 @@ describe("control editor composed mutations", () => {
     const quantizeFloor = (tick: number) =>
       Math.floor(tick / quantizeUnit) * quantizeUnit
 
-    editor.mutate(
-      updateItemsInRange([0, 100], [0, 20], quantizeFloor, quantizeUnit),
-    )
+    updateItemsInRange([0, 100], [0, 20], quantizeFloor, quantizeUnit)(editor)
 
     const items = editor
       .getItems()
@@ -147,7 +137,7 @@ describe("control editor composed mutations", () => {
       ],
     }
 
-    editor.mutate(pasteItemsAtPosition(data, 100))
+    pasteItemsAtPosition(data, 100)(editor)
 
     const items = editor
       .getItems()
@@ -168,7 +158,7 @@ describe("control editor composed mutations", () => {
       events: [{ id: 1, tick: 0, value: 10 }],
     }
 
-    editor.mutate(pasteItemsAtPosition(data, 100))
+    pasteItemsAtPosition(data, 100)(editor)
 
     expect(editor.getItems()).toStrictEqual([])
   })
