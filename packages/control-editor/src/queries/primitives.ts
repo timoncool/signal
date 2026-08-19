@@ -3,7 +3,7 @@ import { ValueEventType } from "../entities/ValueEventType"
 import { ControlEditorQuery, ControlEditorQueryContext } from "./type"
 
 type QueryControlEditor = {
-  type: ValueEventType
+  readonly type: ValueEventType
   getItems: () => readonly ControlItem[]
   getById: (id: number) => ControlItem | undefined
 }

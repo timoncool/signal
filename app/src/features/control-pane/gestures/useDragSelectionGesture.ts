@@ -1,8 +1,4 @@
-import {
-  getItemsByIds,
-  moveItems,
-  removeRedundantItems,
-} from "@signal-app/control-editor"
+import { moveItems, removeRedundantItems } from "@signal-app/control-editor"
 import { Point } from "@signal-app/geometry"
 import { useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
@@ -39,7 +35,7 @@ export const useDragSelectionGesture = (): MouseDownHandler<
         selectedEventIds = [hitEventId]
       }
 
-      const items = controlEditor.query(getItemsByIds(selectedEventIds))
+      const items = controlEditor.getItemsByIds(selectedEventIds)
 
       const draggedItem = items.find((item) => item.id === hitEventId)
       if (draggedItem === undefined) {

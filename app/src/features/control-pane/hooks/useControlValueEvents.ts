@@ -1,4 +1,3 @@
-import { getItemsInRangeWithPrevious } from "@signal-app/control-editor"
 import { useCallback } from "react"
 import { useDerivedValue } from "../../../hooks/useDerivedValue"
 import { useTickScroll } from "../../../hooks/useTickScroll"
@@ -11,7 +10,7 @@ export function useControlValueEvents() {
   return useDerivedValue(
     controlEditor.observeItems,
     useCallback(
-      () => controlEditor.query(getItemsInRangeWithPrevious(tickRange)),
+      () => controlEditor.getItemsInRangeWithPrevious(tickRange),
       [controlEditor, tickRange],
     ),
   )

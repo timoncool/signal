@@ -12,6 +12,11 @@ import { ControlItem } from "./entities/ControlItem"
 import { controlEventToItem } from "./entities/transform"
 import { ValueEventType } from "./entities/ValueEventType"
 import { ControlEditorMutator } from "./mutations/type"
+import {
+  getItemsByIds,
+  getItemsClipboardData,
+  getItemsInRangeWithPrevious,
+} from "./queries"
 import { ControlEditorQuery } from "./queries/type"
 import { ControlEditor } from "./type"
 
@@ -67,4 +72,17 @@ export class TrackControlEditor implements ControlEditor {
 
   mutate = <R = void>(fn: ControlEditorMutator<R>): R =>
     this.track.transaction(() => fn(this))
+
+  private bindQuery =
+    <A extends unknown[], R>(
+      fn: (...args: A) => ControlEditorQuery<R>,
+    ): ((...args: A) => R) =>
+    (...args: A) =>
+      fn(...args)(this)
+
+  // facade methods
+
+  getItemsByIds = this.bindQuery(getItemsByIds)
+  getItemsClipboardData = this.bindQuery(getItemsClipboardData)
+  getItemsInRangeWithPrevious = this.bindQuery(getItemsInRangeWithPrevious)
 }

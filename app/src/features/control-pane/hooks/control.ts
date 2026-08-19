@@ -2,8 +2,6 @@ import {
   ClipboardDataSchema,
   createOrUpdateItemValue,
   duplicateItems,
-  getItemsClipboardData,
-  getValueEventType,
   pasteItemsAtPosition,
   removeItems,
   ValueEventType,
@@ -62,7 +60,7 @@ export const useCopyControlSelection = () => {
     if (selectedEventIds.length === 0) {
       return
     }
-    const data = controlEditor.query(getItemsClipboardData(selectedEventIds))
+    const data = controlEditor.getItemsClipboardData(selectedEventIds)
     if (!data) {
       return
     }
@@ -83,10 +81,7 @@ export const usePasteControlSelection = () => {
 
       if (
         !data ||
-        !ValueEventType.equals(
-          data.valueEventType,
-          controlEditor.query(getValueEventType),
-        )
+        !ValueEventType.equals(data.valueEventType, controlEditor.type)
       ) {
         return
       }
