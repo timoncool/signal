@@ -8,14 +8,14 @@ export function EventViewProvider({ children }: { children: React.ReactNode }) {
   const pianoRollEditor = usePianoRollEditor()
   const store = useStore()
 
-  useEffect(
-    () =>
-      store.sub(tickRangeAtom, () => {
-        const tickRange = store.get(tickRangeAtom)
-        pianoRollEditor.updateTickRange(tickRange)
-      }),
-    [pianoRollEditor, store],
-  )
+  useEffect(() => {
+    const update = () => {
+      const tickRange = store.get(tickRangeAtom)
+      pianoRollEditor.updateTickRange(tickRange)
+    }
+    update()
+    return store.sub(tickRangeAtom, update)
+  }, [pianoRollEditor, store])
 
   return children
 }

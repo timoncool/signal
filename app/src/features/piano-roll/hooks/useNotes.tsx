@@ -13,9 +13,15 @@ export type PianoNoteItem = Rect & {
 }
 
 export function useNotes(): PianoNoteItem[] {
-  const { selectedTrack, selectedNoteIds } = usePianoRoll()
+  const { selectedNoteIds } = usePianoRoll()
   const { transform } = useNoteCoordTransform()
   const pianoRollEditor = usePianoRollEditor()
+
+  const isRhythmTrack = useSyncExternalStore(
+    pianoRollEditor.onIsRhythmTrackChanged.subscribe,
+    () => pianoRollEditor.isRhythmTrack,
+  )
+
   const noteEvents = useSyncExternalStore(
     pianoRollEditor.onNotesChanged.subscribe,
     () => pianoRollEditor.notes,
@@ -23,10 +29,8 @@ export function useNotes(): PianoNoteItem[] {
 
   const getRect = useCallback(
     (e: NoteEvent) =>
-      selectedTrack?.isRhythmTrack
-        ? transform.getDrumRect(e)
-        : transform.getRect(e),
-    [transform, selectedTrack?.isRhythmTrack],
+      isRhythmTrack ? transform.getDrumRect(e) : transform.getRect(e),
+    [transform, isRhythmTrack],
   )
 
   const notes = useMemo(

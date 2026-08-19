@@ -3,6 +3,7 @@ import type { PianoRollEditorQuery, PianoRollEditorQueryContext } from "./type"
 
 type QueryPianoRollEditor = {
   getNoteById: (id: number) => NoteEvent | undefined
+  getAllNotes: () => readonly NoteEvent[]
 }
 
 const asQueryPianoRollEditor = (
@@ -13,3 +14,7 @@ export const getNoteById =
   (id: number): PianoRollEditorQuery<NoteEvent | undefined> =>
   (context) =>
     asQueryPianoRollEditor(context).getNoteById(id)
+
+export const getAllNotes: PianoRollEditorQuery<readonly NoteEvent[]> = (
+  context,
+) => asQueryPianoRollEditor(context).getAllNotes()

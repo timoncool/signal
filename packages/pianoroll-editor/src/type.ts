@@ -1,6 +1,6 @@
 import type { Range, TrackEvent } from "@signal-app/core"
 import type { Observable } from "@signal-app/observable"
-import type { NoteEvent } from "./entities/NoteEvent"
+import type { NoteEvent } from "./entities"
 import type { PianoRollEditorMutator } from "./mutations"
 import type { PianoRollEditorQuery } from "./queries"
 

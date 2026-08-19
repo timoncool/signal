@@ -65,7 +65,13 @@ export function PianoRollProvider({ children }: { children: React.ReactNode }) {
 function PianoRollProviderInner({ children }: { children: React.ReactNode }) {
   const { songStore, midiMonitor, midiRecorder } = useStores()
   const store = useStore()
-  const { selectedTrack, selectedTrackId, setSelectedTrackId } = usePianoRoll()
+  const { selectedTrackId, setSelectedTrackId } = usePianoRoll()
+  const { tracks } = useSong()
+
+  const selectedTrack = useMemo(
+    () => tracks.find((t) => t.id === selectedTrackId),
+    [selectedTrackId, tracks],
+  )
 
   const pianoRollEditor = useMemo(
     () => selectedTrack && createPianoRollEditor(selectedTrack),
@@ -83,9 +89,13 @@ function PianoRollProviderInner({ children }: { children: React.ReactNode }) {
   }, [setSelectedTrackId, songStore])
 
   // sync MIDIMonitor channel with selected track
-  useEffect(() => {
-    midiMonitor.channel = selectedTrack?.channel ?? 0
-  }, [midiMonitor, selectedTrack])
+  useEffect(
+    () =>
+      selectedTrack?.onChannelChanged.subscribe(() => {
+        midiMonitor.channel = selectedTrack?.channel ?? 0
+      }),
+    [midiMonitor, selectedTrack],
+  )
 
   // sync MIDIRecorder trackId with selected track
   useEffect(() => {
@@ -134,14 +144,6 @@ export function usePianoRoll() {
     },
     get selection() {
       return useAtomValue(selectionAtom, { store })
-    },
-    get selectedTrack() {
-      const { tracks } = useSong()
-      const selectedTrackId = useAtomValue(selectedTrackIdAtom, { store })
-      return useMemo(
-        () => tracks.find((track) => track.id === selectedTrackId),
-        [tracks, selectedTrackId],
-      )
     },
     get selectedTrackId() {
       return useAtomValue(selectedTrackIdAtom, { store })

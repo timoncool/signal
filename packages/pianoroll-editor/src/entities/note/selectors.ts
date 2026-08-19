@@ -1,8 +1,10 @@
 import { maxBy, minBy } from "lodash"
-import { NoteEvent } from "../event"
-import { Range } from "../geometry/Range"
+import { NoteEvent } from "../../../../core/src/entities/event"
+import { Range } from "../../../../core/src/entities/geometry/Range"
 
-export const getNotesDuration = (notes: readonly NoteEvent[]) => {
+export const getNotesDuration = (
+  notes: readonly { tick: number; duration: number }[],
+) => {
   const minTick = minBy(notes, (n) => n.tick)?.tick ?? 0
   const maxTick = maxBy(notes, (n) => n.tick + n.duration)?.tick ?? 0
   return maxTick - minTick

@@ -1,16 +1,17 @@
+import { Range } from "@signal-app/core"
 import {
   dragNote,
   getDraggableArea,
   getDraggablePosition,
   getNotesByIds,
-  Range,
-} from "@signal-app/core"
+} from "@signal-app/pianoroll-editor"
 import { max, min } from "lodash"
 import { useCallback } from "react"
 import { MaxNoteNumber } from "../../../Constants"
 import { NotePoint } from "../entities/NotePoint"
 import { Selection } from "../entities/Selection"
 import { usePianoRoll } from "./usePianoRoll"
+import { usePianoRollEditor } from "./usePianoRollEditor"
 
 export type DraggableArea = {
   tickRange?: Range
@@ -29,17 +30,16 @@ export type PianoRollDraggable =
     }
 
 export function usePianoRollDraggable() {
-  const { getSelection, getSelectedTrack, getSelectedNoteIds, setSelection } =
-    usePianoRoll()
+  const { getSelection, getSelectedNoteIds, setSelection } = usePianoRoll()
+  const pianoRollEditor = usePianoRollEditor()
 
   const updateDraggable = useCallback(
     (draggable: PianoRollDraggable, position: Partial<NotePoint>) => {
       const selection = getSelection()
-      const selectedTrack = getSelectedTrack()
 
       switch (draggable.type) {
         case "note": {
-          return selectedTrack?.mutate(
+          return pianoRollEditor.mutate(
             dragNote(position, draggable.noteId, draggable.position),
           )
         }
@@ -82,19 +82,18 @@ export function usePianoRollDraggable() {
         }
       }
     },
-    [getSelection, getSelectedTrack, setSelection],
+    [getSelection, setSelection, pianoRollEditor],
   )
 
   return {
     getDraggablePosition: useCallback(
       (draggable: PianoRollDraggable): NotePoint | null => {
         const selection = getSelection()
-        const selectedTrack = getSelectedTrack()
 
         switch (draggable.type) {
           case "note": {
             return (
-              selectedTrack?.query(
+              pianoRollEditor.query(
                 getDraggablePosition(draggable.noteId, draggable.position),
               ) ?? null
             )
@@ -114,18 +113,17 @@ export function usePianoRollDraggable() {
           }
         }
       },
-      [getSelectedTrack, getSelection],
+      [getSelection, pianoRollEditor],
     ),
     updateDraggables: useCallback(
       (updates: { draggable: PianoRollDraggable; position: NotePoint }[]) => {
-        const selectedTrack = getSelectedTrack()
-        return selectedTrack?.transaction(() =>
+        return pianoRollEditor.mutate(() =>
           updates.map(({ draggable, position }) =>
             updateDraggable(draggable, position),
           ),
         )
       },
-      [updateDraggable, getSelectedTrack],
+      [updateDraggable, pianoRollEditor],
     ),
     getDraggableArea: useCallback(
       (
@@ -133,14 +131,10 @@ export function usePianoRollDraggable() {
         minLength: number = 0,
       ): DraggableArea | null => {
         const selectedNoteIds = getSelectedNoteIds()
-        const selectedTrack = getSelectedTrack()
 
-        if (selectedTrack === undefined) {
-          return null
-        }
         switch (draggable.type) {
           case "note":
-            return selectedTrack.query(
+            return pianoRollEditor.query(
               getDraggableArea(
                 draggable.noteId,
                 selectedNoteIds,
@@ -155,7 +149,7 @@ export function usePianoRollDraggable() {
             if (selection === null) {
               return null
             }
-            const notes = selectedTrack.query(getNotesByIds(selectedNoteIds))
+            const notes = pianoRollEditor.query(getNotesByIds(selectedNoteIds))
             const minTick = min(notes.map((n) => n.tick)) ?? 0
             // The length of the note that protrudes from the left end of the selection
             const tickOffset = selection.fromTick - minTick
@@ -209,7 +203,7 @@ export function usePianoRollDraggable() {
           }
         }
       },
-      [getSelection, getSelectedNoteIds, getSelectedTrack],
+      [getSelection, getSelectedNoteIds, pianoRollEditor],
     ),
   }
 }

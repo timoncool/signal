@@ -1,10 +1,8 @@
+import { MaxNoteNumber, Range } from "@signal-app/core"
 import { max, min } from "lodash"
-import { MaxNoteNumber } from "../../../helpers"
-import { isNoteEvent } from "../../event"
-import { Range } from "../../geometry/Range"
-import { getNotesByIds } from "./note"
-import { getEventById } from "./primitives"
-import { TrackEventsQuery } from "./type"
+import { getNotesByIds } from "./items"
+import { getNoteById } from "./primitives"
+import { PianoRollEditorQuery } from "./type"
 
 interface NotePoint {
   readonly tick: number
@@ -15,10 +13,10 @@ export const getDraggablePosition =
   (
     noteId: number,
     position: "left" | "center" | "right",
-  ): TrackEventsQuery<NotePoint | null> =>
+  ): PianoRollEditorQuery<NotePoint | null> =>
   (events) => {
-    const note = getEventById(noteId)(events)
-    if (note === undefined || !isNoteEvent(note)) {
+    const note = getNoteById(noteId)(events)
+    if (note === undefined) {
       return null
     }
     switch (position) {
@@ -40,16 +38,16 @@ export const getDraggableArea =
     selectedNoteIds: readonly number[],
     position: "left" | "center" | "right",
     minLength: number = 0,
-  ): TrackEventsQuery<{
+  ): PianoRollEditorQuery<{
     tickRange: Range
     noteNumberRange: Range
   } | null> =>
-  (events) => {
-    const note = getEventById(noteId)(events)
-    if (note === undefined || !isNoteEvent(note)) {
+  (context) => {
+    const note = getNoteById(noteId)(context)
+    if (note === undefined) {
       return null
     }
-    const notes = getNotesByIds(selectedNoteIds)(events)
+    const notes = getNotesByIds(selectedNoteIds)(context)
 
     const minTick = min(notes.map((n) => n.tick)) ?? 0
     const tickLowerBound = note.tick - minTick

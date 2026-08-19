@@ -1,2 +1,1 @@
 export * from "./clipboardTypes"
-export * from "./note"

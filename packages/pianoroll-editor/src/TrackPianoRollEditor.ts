@@ -1,5 +1,6 @@
 import {
   addEvent,
+  getAllNotes,
   getEventById,
   isEventOverlapRange,
   isNoteEvent,
@@ -9,7 +10,7 @@ import {
   updateEvent,
 } from "@signal-app/core"
 import { ObservableValue } from "@signal-app/observable"
-import { NoteEvent } from "./entities/NoteEvent"
+import { NoteEvent } from "./entities/note/NoteEvent"
 import { PianoRollEditorMutator } from "./mutations"
 import { PianoRollEditorQuery } from "./queries"
 import { PianoRollEditor } from "./type"
@@ -22,22 +23,25 @@ export class TrackPianoRollEditor implements PianoRollEditor {
   private _tickRange: Range = [0, 0]
 
   constructor(private readonly track: Track) {
+    this.updateWindowedEvents()
     this.track.subscribeEventsChanged(
-      isEventOverlapRange(this._tickRange),
-      this.updateNotes,
+      (e) => isEventOverlapRange(this._tickRange)(e),
+      this.updateWindowedEvents,
     )
   }
 
   updateTickRange = (range: Range) => {
     this._tickRange = range
+    this.updateWindowedEvents()
   }
 
-  private updateNotes = () => {
+  private updateWindowedEvents = () => {
     const events = this.track.events.filter(
       isEventOverlapRange(this._tickRange),
     )
-    const notes = events.filter(isNoteEvent)
     this._windowedEvents.set(events)
+
+    const notes = events.filter(isNoteEvent)
     this._notes.set(notes)
   }
 
@@ -75,6 +79,10 @@ export class TrackPianoRollEditor implements PianoRollEditor {
       return event
     }
     return undefined
+  }
+
+  getAllNotes = (): readonly NoteEvent[] => {
+    return this.track.query(getAllNotes())
   }
 
   // mutations
