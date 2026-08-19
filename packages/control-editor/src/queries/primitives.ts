@@ -2,7 +2,7 @@ import { ControlItem } from "../entities/ControlItem"
 import { ValueEventType } from "../entities/ValueEventType"
 import { ControlEditorQuery, ControlEditorQueryContext } from "./type"
 
-type QueryControlEditor = {
+export interface QueryControlEditor {
   readonly type: ValueEventType
   getItems: () => readonly ControlItem[]
   getById: (id: number) => ControlItem | undefined

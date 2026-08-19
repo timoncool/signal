@@ -11,10 +11,12 @@ import { ControlEvent } from "./entities/ControlEvent"
 import { ControlItem } from "./entities/ControlItem"
 import { controlEventToItem } from "./entities/transform"
 import { ValueEventType } from "./entities/ValueEventType"
-import { ControlEditorMutator } from "./mutations/type"
-import { ControlEditorQuery } from "./queries/type"
+import { MutableControlEditor } from "./mutations"
+import { QueryControlEditor } from "./queries"
 
-export class TrackControlEditor {
+export class TrackControlEditor
+  implements QueryControlEditor, MutableControlEditor
+{
   private readonly predicate: (e: TrackEvent) => e is ControlEvent
   private readonly factory: ReturnType<typeof ValueEventType.getEventFactory>
 
@@ -59,9 +61,4 @@ export class TrackControlEditor {
     this.track.subscribeEventsChanged(this.predicate, listener)
 
   createPreviewEvent = (value: number) => this.factory(value)
-
-  query = <R>(fn: ControlEditorQuery<R>): R => fn(this)
-
-  mutate = <R = void>(fn: ControlEditorMutator<R>): R =>
-    this.track.transaction(() => fn(this))
 }

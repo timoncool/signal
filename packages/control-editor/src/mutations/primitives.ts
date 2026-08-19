@@ -1,7 +1,7 @@
 import { ControlItem } from "../entities/ControlItem"
 import { ControlEditorMutator, ControlEditorMutatorContext } from "./type"
 
-type MutableControlEditor = {
+export interface MutableControlEditor {
   addItem: (item: Omit<ControlItem, "id">) => ControlItem
   removeItems: (ids: readonly number[]) => void
   updateItems: (items: readonly ControlItem[]) => void

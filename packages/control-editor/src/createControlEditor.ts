@@ -35,7 +35,7 @@ export const createControlEditor = (track: Track, type: ValueEventType) => {
       fn: (...args: A) => ControlEditorMutator<R>,
     ): ((...args: A) => R) =>
     (...args: A) =>
-      editor.mutate(fn(...args))
+      fn(...args)(editor)
 
   return {
     type: editor.type,
