@@ -1,9 +1,9 @@
 import { NoteEvent } from "../entities"
 import { PianoRollEditorMutator, PianoRollEditorMutatorContext } from "./type"
 
-type MutablePianoRollEditor = {
+export interface MutablePianoRollEditor {
   addNote: (note: Omit<NoteEvent, "id">) => NoteEvent
-  removeNotes: (ids: readonly number[]) => void
+  removeNote: (id: number) => void
   updateNote: (id: number, note: Partial<NoteEvent>) => NoteEvent | undefined
 }
 
@@ -19,7 +19,7 @@ export const addNote =
 export const removeNote =
   (id: number): PianoRollEditorMutator<void> =>
   (context) => {
-    asMutablePianoRollEditor(context).removeNotes([id])
+    asMutablePianoRollEditor(context).removeNote(id)
   }
 
 export const updateNote =

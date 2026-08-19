@@ -18,7 +18,7 @@ describe("pianoroll editor mutations/composed", () => {
       velocity: 100,
     })
 
-    const result = editor.mutate(duplicateNotes([first.id, second.id], 0))
+    const result = duplicateNotes([first.id, second.id], 0)(editor)
 
     expect(result.deltaTick).toBe(20)
     expect(result.addedNoteIds).toHaveLength(2)
@@ -39,9 +39,7 @@ describe("pianoroll editor mutations/composed", () => {
       velocity: 100,
     })
 
-    editor.mutate(
-      quantizeNotes([note.id], (tick) => Math.floor(tick / 10) * 10),
-    )
+    quantizeNotes([note.id], (tick) => Math.floor(tick / 10) * 10)(editor)
 
     expect(editor.getNoteById(note.id)?.tick).toBe(10)
   })
@@ -49,15 +47,13 @@ describe("pianoroll editor mutations/composed", () => {
   it("addClipboardNotes adds pasted notes shifted to the target tick", () => {
     const editor = createTrackPianoRollEditor()
 
-    editor.mutate(
-      addClipboardNotes(
-        {
-          type: "piano_notes",
-          notes: [{ tick: 0, duration: 5, noteNumber: 70, velocity: 90 }],
-        },
-        40,
-      ),
-    )
+    addClipboardNotes(
+      {
+        type: "piano_notes",
+        notes: [{ tick: 0, duration: 5, noteNumber: 70, velocity: 90 }],
+      },
+      40,
+    )(editor)
 
     expect(editor.getAllNotes()).toMatchObject([
       { tick: 40, duration: 5, noteNumber: 70, velocity: 90 },

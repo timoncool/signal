@@ -1,15 +1,4 @@
-import {
-  addClipboardNotes,
-  cloneNotes,
-  duplicateNotes,
-  getAllNoteIds,
-  getNeighborNote,
-  getNotesClipboardData,
-  PianoNotesClipboardDataSchema,
-  quantizeNotes,
-  removeNotes,
-  transposeNotes,
-} from "@signal-app/pianoroll-editor"
+import { PianoNotesClipboardDataSchema } from "@signal-app/pianoroll-editor"
 import { useCallback } from "react"
 import { useHistory } from "../../../hooks/useHistory"
 import { usePlayer } from "../../../hooks/usePlayer"
@@ -38,7 +27,7 @@ export const useTransposeSelection = () => {
         setSelection(s)
       }
 
-      pianoRollEditor.mutate(transposeNotes(selectedNoteIds, deltaPitch))
+      pianoRollEditor.transposeNotes(selectedNoteIds, deltaPitch)
     },
     [pushHistory, selection, setSelection, pianoRollEditor, selectedNoteIds],
   )
@@ -53,7 +42,7 @@ export const useCloneSelection = () => {
       return
     }
     // Create a selection that copies notes within selection
-    const newNoteIds = pianoRollEditor.mutate(cloneNotes(selectedNoteIds)) ?? []
+    const newNoteIds = pianoRollEditor.cloneNotes(selectedNoteIds)
     setSelectedNoteIds(newNoteIds)
   }, [selection, selectedNoteIds, pianoRollEditor, setSelectedNoteIds])
 }
@@ -66,8 +55,9 @@ export const useCopySelection = () => {
     if (selectedNoteIds.length === 0) {
       return
     }
-    const data = pianoRollEditor.query(
-      getNotesClipboardData(selectedNoteIds, selection?.fromTick),
+    const data = pianoRollEditor.getNotesClipboardData(
+      selectedNoteIds,
+      selection?.fromTick,
     )
     if (!data) {
       return
@@ -91,7 +81,7 @@ export const useDeleteSelection = () => {
 
     // 選択範囲と選択されたノートを削除
     // Remove selected notes and selected notes
-    pianoRollEditor.mutate(removeNotes(selectedNoteIds))
+    pianoRollEditor.removeNotes(selectedNoteIds)
     setSelection(null)
     setSelectedNoteIds([])
   }, [
@@ -121,7 +111,7 @@ export const usePasteSelection = () => {
 
       pushHistory()
 
-      pianoRollEditor.mutate(addClipboardNotes(data, position))
+      pianoRollEditor.addClipboardNotes(data, position)
     },
     [pianoRollEditor, position, pushHistory],
   )
@@ -151,9 +141,8 @@ export const useDuplicateSelection = () => {
 
     // move to the end of selection
     const deltaTick = selection ? selection.toTick - selection.fromTick : 0
-    const { addedNoteIds, deltaTick: newDeltaTick } = pianoRollEditor.mutate(
-      duplicateNotes(selectedNoteIds, deltaTick),
-    ) ?? { addedNoteIds: [], deltaTick: 0 }
+    const { addedNoteIds, deltaTick: newDeltaTick } =
+      pianoRollEditor.duplicateNotes(selectedNoteIds, deltaTick)
 
     if (selection) {
       setSelection(Selection.moved(selection, newDeltaTick, 0))
@@ -190,9 +179,10 @@ const useSelectNeighborNote = () => {
 
   return useCallback(
     (deltaIndex: number) => {
-      const nextNote =
-        pianoRollEditor.query(getNeighborNote(deltaIndex, selectedNoteIds)) ??
-        null
+      const nextNote = pianoRollEditor.getNeighborNote(
+        deltaIndex,
+        selectedNoteIds,
+      )
       if (nextNote === null) {
         return
       }
@@ -225,7 +215,7 @@ export const useQuantizeSelectedNotes = () => {
       return
     }
     pushHistory()
-    pianoRollEditor.mutate(quantizeNotes(selectedNoteIds, forceQuantizeRound))
+    pianoRollEditor.quantizeNotes(selectedNoteIds, forceQuantizeRound)
   }, [selectedNoteIds, pushHistory, pianoRollEditor, forceQuantizeRound])
 }
 
@@ -235,7 +225,7 @@ export const useSelectAllNotes = () => {
   const { setSelectedEventIds } = useControlPane()
 
   return useCallback(() => {
-    setSelectedNoteIds(pianoRollEditor.query(getAllNoteIds) ?? [])
+    setSelectedNoteIds(pianoRollEditor.getAllNoteIds())
     setSelectedEventIds([])
   }, [pianoRollEditor, setSelectedNoteIds, setSelectedEventIds])
 }

@@ -12,7 +12,7 @@ describe("pianoroll editor mutations/draggable", () => {
       velocity: 100,
     })
 
-    editor.mutate(dragNote({ tick: 15, noteNumber: 62 }, note.id, "center"))
+    dragNote({ tick: 15, noteNumber: 62 }, note.id, "center")(editor)
 
     const updated = editor.getNoteById(note.id)
     expect(updated?.tick).toBe(15)
@@ -29,8 +29,8 @@ describe("pianoroll editor mutations/draggable", () => {
       velocity: 100,
     })
 
-    editor.mutate(dragNote({ tick: 6 }, note.id, "left"))
-    editor.mutate(dragNote({ tick: 40 }, note.id, "right"))
+    dragNote({ tick: 6 }, note.id, "left")(editor)
+    dragNote({ tick: 40 }, note.id, "right")(editor)
 
     const updated = editor.getNoteById(note.id)
     expect(updated?.tick).toBe(6)

@@ -27,14 +27,12 @@ describe("pianoroll editor queries/items", () => {
       velocity: 100,
     })
 
-    const noteIds = editor.query(
-      getNoteIdsInSelection({
-        fromTick: 0,
-        toTick: 30,
-        fromNoteNumber: 61,
-        toNoteNumber: 59,
-      }),
-    )
+    const noteIds = getNoteIdsInSelection({
+      fromTick: 0,
+      toTick: 30,
+      fromNoteNumber: 61,
+      toNoteNumber: 59,
+    })(editor)
 
     expect(noteIds).toStrictEqual([first.id])
   })

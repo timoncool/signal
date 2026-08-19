@@ -1,5 +1,4 @@
 import { NoteNumber } from "@signal-app/core"
-import { addNote } from "@signal-app/pianoroll-editor"
 import { useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
 import { useHistory } from "../../../hooks/useHistory"
@@ -44,14 +43,12 @@ export const useCreateNoteGesture = (): MouseDownHandler => {
         ? timebase / 8 // 32th note in the rhythm track
         : (lastNoteDuration ?? quantizeUnit)
 
-      const note = pianoRollEditor.mutate(
-        addNote({
-          noteNumber: noteNumber,
-          tick: quantizedTick,
-          velocity: newNoteVelocity,
-          duration,
-        }),
-      )
+      const note = pianoRollEditor.addNote({
+        noteNumber: noteNumber,
+        tick: quantizedTick,
+        velocity: newNoteVelocity,
+        duration,
+      })
 
       if (note === undefined) {
         return

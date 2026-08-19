@@ -11,11 +11,12 @@ import {
 } from "@signal-app/core"
 import { ObservableValue } from "@signal-app/observable"
 import { NoteEvent } from "./entities/note/NoteEvent"
-import { PianoRollEditorMutator } from "./mutations"
-import { PianoRollEditorQuery } from "./queries"
-import { PianoRollEditor } from "./type"
+import { MutablePianoRollEditor } from "./mutations/primitives"
+import { QueryPianoRollEditor } from "./queries/primitives"
 
-export class TrackPianoRollEditor implements PianoRollEditor {
+export class TrackPianoRollEditor
+  implements QueryPianoRollEditor, MutablePianoRollEditor
+{
   private readonly _windowedEvents = new ObservableValue<readonly TrackEvent[]>(
     [],
   )
@@ -71,8 +72,6 @@ export class TrackPianoRollEditor implements PianoRollEditor {
 
   // queries
 
-  query = <R>(fn: PianoRollEditorQuery<R>): R => fn(this)
-
   getNoteById = (id: number): NoteEvent | undefined => {
     const event = this.track.query(getEventById(id))
     if (event && isNoteEvent(event)) {
@@ -87,9 +86,6 @@ export class TrackPianoRollEditor implements PianoRollEditor {
 
   // mutations
 
-  mutate = <R>(mutator: PianoRollEditorMutator<R>): R =>
-    this.track.transaction(() => mutator(this))
-
   addNote = (note: Omit<NoteEvent, "id">): NoteEvent => {
     const event = {
       ...note,
@@ -97,6 +93,10 @@ export class TrackPianoRollEditor implements PianoRollEditor {
       subtype: "note",
     } as const
     return this.track.mutate(addEvent(event)) as unknown as NoteEvent
+  }
+
+  removeNote = (id: number): void => {
+    this.track.removeEvent(id)
   }
 
   updateNote = (

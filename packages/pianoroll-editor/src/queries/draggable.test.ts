@@ -12,7 +12,7 @@ describe("pianoroll editor queries/draggable", () => {
       velocity: 100,
     })
 
-    const result = editor.query(getDraggablePosition(note.id, "right"))
+    const result = getDraggablePosition(note.id, "right")(editor)
 
     expect(result).toStrictEqual({ tick: 30, noteNumber: 60 })
   })
@@ -32,9 +32,11 @@ describe("pianoroll editor queries/draggable", () => {
       velocity: 100,
     })
 
-    const area = editor.query(
-      getDraggableArea(first.id, [first.id, second.id], "center"),
-    )
+    const area = getDraggableArea(
+      first.id,
+      [first.id, second.id],
+      "center",
+    )(editor)
 
     expect(area?.tickRange).toStrictEqual([0, Infinity])
     expect(area?.noteNumberRange).toStrictEqual([0, 115])

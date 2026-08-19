@@ -1,7 +1,7 @@
 import { NoteEvent } from "../entities"
 import type { PianoRollEditorQuery, PianoRollEditorQueryContext } from "./type"
 
-type QueryPianoRollEditor = {
+export interface QueryPianoRollEditor {
   getNoteById: (id: number) => NoteEvent | undefined
   getAllNotes: () => readonly NoteEvent[]
 }

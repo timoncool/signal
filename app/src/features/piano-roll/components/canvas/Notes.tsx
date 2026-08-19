@@ -1,5 +1,4 @@
 import { GLFallback, HitArea } from "@ryohey/webgl-react"
-import { removeNotes } from "@signal-app/pianoroll-editor"
 import React, { FC, useCallback, useMemo } from "react"
 import { useTrack } from "../../../../hooks/useTrack"
 import { useSettings } from "../../../setting/hooks/useSettings"
@@ -116,7 +115,7 @@ const NoteHitAreas: FC<NotesContentProps> = ({ zIndex, notes }) => {
           break
         }
         case 2:
-          pianoRollEditor.mutate(removeNotes([item.id]))
+          pianoRollEditor.removeNote(item.id)
           break
         default:
           return null
@@ -138,7 +137,7 @@ const NoteHitAreas: FC<NotesContentProps> = ({ zIndex, notes }) => {
       // Right click to remove note while dragging
       if (e.buttons === 2) {
         e.stopPropagation()
-        pianoRollEditor.mutate(removeNotes([item.id]))
+        pianoRollEditor.removeNote(item.id)
       }
     },
     [pianoRollEditor],

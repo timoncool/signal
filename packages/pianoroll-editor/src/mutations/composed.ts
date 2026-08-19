@@ -37,7 +37,7 @@ export const transposeNotes =
   }
 
 export const cloneNotes =
-  (noteIds: readonly number[]): PianoRollEditorMutator =>
+  (noteIds: readonly number[]): PianoRollEditorMutator<number[]> =>
   (context) =>
     getNotesByIds(noteIds)(context)
       .map((note) => addNote(note)(context))

@@ -1,5 +1,4 @@
 import { Point } from "@signal-app/geometry"
-import { getNoteIdsInSelection } from "@signal-app/pianoroll-editor"
 import { useCallback } from "react"
 import { MouseDownHandler } from "../../../gesture/MouseGesture"
 import { observeDrag2 } from "../../../helpers/observeDrag"
@@ -49,9 +48,7 @@ export const useSelectNoteGesture = (): MouseDownHandler => {
 
           // 選択範囲を確定して選択範囲内のノートを選択状態にする
           // Confirm the selection and select the notes in the selection state
-          setSelectedNoteIds(
-            pianoRollEditor.query(getNoteIdsInSelection(selection)) ?? [],
-          )
+          setSelectedNoteIds(pianoRollEditor.getNoteIdsInSelection(selection))
 
           setSelection(null)
         },

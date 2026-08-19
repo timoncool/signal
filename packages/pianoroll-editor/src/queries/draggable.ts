@@ -4,7 +4,7 @@ import { getNotesByIds } from "./items"
 import { getNoteById } from "./primitives"
 import { PianoRollEditorQuery } from "./type"
 
-interface NotePoint {
+export interface NotePoint {
   readonly tick: number
   readonly noteNumber: number
 }

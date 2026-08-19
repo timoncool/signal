@@ -1,5 +1,4 @@
 export * from "./createPianoRollEditor"
-export * from "./entities"
-export * from "./mutations"
-export * from "./queries"
+export * from "./entities/clipboardTypes"
+export * from "./entities/note/NoteEvent"
 export * from "./type"

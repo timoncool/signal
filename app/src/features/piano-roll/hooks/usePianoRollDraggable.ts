@@ -1,10 +1,4 @@
 import { Range } from "@signal-app/core"
-import {
-  dragNote,
-  getDraggableArea,
-  getDraggablePosition,
-  getNotesByIds,
-} from "@signal-app/pianoroll-editor"
 import { max, min } from "lodash"
 import { useCallback } from "react"
 import { MaxNoteNumber } from "../../../Constants"
@@ -39,8 +33,10 @@ export function usePianoRollDraggable() {
 
       switch (draggable.type) {
         case "note": {
-          return pianoRollEditor.mutate(
-            dragNote(position, draggable.noteId, draggable.position),
+          return pianoRollEditor.dragNote(
+            position,
+            draggable.noteId,
+            draggable.position,
           )
         }
         case "selection": {
@@ -92,10 +88,9 @@ export function usePianoRollDraggable() {
 
         switch (draggable.type) {
           case "note": {
-            return (
-              pianoRollEditor.query(
-                getDraggablePosition(draggable.noteId, draggable.position),
-              ) ?? null
+            return pianoRollEditor.getDraggablePosition(
+              draggable.noteId,
+              draggable.position,
             )
           }
           case "selection": {
@@ -117,7 +112,7 @@ export function usePianoRollDraggable() {
     ),
     updateDraggables: useCallback(
       (updates: { draggable: PianoRollDraggable; position: NotePoint }[]) => {
-        return pianoRollEditor.mutate(() =>
+        return pianoRollEditor.transaction(() =>
           updates.map(({ draggable, position }) =>
             updateDraggable(draggable, position),
           ),
@@ -134,13 +129,11 @@ export function usePianoRollDraggable() {
 
         switch (draggable.type) {
           case "note":
-            return pianoRollEditor.query(
-              getDraggableArea(
-                draggable.noteId,
-                selectedNoteIds,
-                draggable.position,
-                minLength,
-              ),
+            return pianoRollEditor.getDraggableArea(
+              draggable.noteId,
+              selectedNoteIds,
+              draggable.position,
+              minLength,
             )
           case "selection": {
             const selection = getSelection()
@@ -149,7 +142,7 @@ export function usePianoRollDraggable() {
             if (selection === null) {
               return null
             }
-            const notes = pianoRollEditor.query(getNotesByIds(selectedNoteIds))
+            const notes = pianoRollEditor.getNotesByIds(selectedNoteIds)
             const minTick = min(notes.map((n) => n.tick)) ?? 0
             // The length of the note that protrudes from the left end of the selection
             const tickOffset = selection.fromTick - minTick
