@@ -1,44 +1,38 @@
 import { describe, expect, it } from "vitest"
-import { TickOrderedArray } from "../../../data/OrdererdArray/TickOrderedArray"
-import { NoteEvent, TrackEvent } from "../../event/TrackEvent"
+import { createTrackPianoRollEditor } from "../testUtils"
 import { dragNote } from "./draggable"
-import { addEvent } from "./primitives"
 
-describe("track mutations/draggable", () => {
+describe("pianoroll editor mutations/draggable", () => {
   it("dragNote updates tick and note number when dragging center", () => {
-    const events = new TickOrderedArray<TrackEvent>()
-    const note = addEvent<NoteEvent>({
-      type: "channel",
-      subtype: "note",
+    const editor = createTrackPianoRollEditor()
+    const note = editor.addNote({
       tick: 10,
       duration: 20,
       noteNumber: 60,
       velocity: 100,
-    })(events)
+    })
 
-    dragNote({ tick: 15, noteNumber: 62 }, note.id, "center")(events)
+    editor.mutate(dragNote({ tick: 15, noteNumber: 62 }, note.id, "center"))
 
-    const updated = events.get(note.id) as NoteEvent | undefined
+    const updated = editor.getNoteById(note.id)
     expect(updated?.tick).toBe(15)
     expect(updated?.noteNumber).toBe(62)
     expect(updated?.duration).toBe(20)
   })
 
   it("dragNote updates duration from edge handles", () => {
-    const events = new TickOrderedArray<TrackEvent>()
-    const note = addEvent<NoteEvent>({
-      type: "channel",
-      subtype: "note",
+    const editor = createTrackPianoRollEditor()
+    const note = editor.addNote({
       tick: 10,
       duration: 20,
       noteNumber: 60,
       velocity: 100,
-    })(events)
+    })
 
-    dragNote({ tick: 6 }, note.id, "left")(events)
-    dragNote({ tick: 40 }, note.id, "right")(events)
+    editor.mutate(dragNote({ tick: 6 }, note.id, "left"))
+    editor.mutate(dragNote({ tick: 40 }, note.id, "right"))
 
-    const updated = events.get(note.id) as NoteEvent | undefined
+    const updated = editor.getNoteById(note.id)
     expect(updated?.tick).toBe(6)
     expect(updated?.duration).toBe(34)
   })
