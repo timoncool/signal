@@ -2,16 +2,12 @@
 
 ## Purpose
 
-Editor facade for pitchBend/controller automation lanes, split out of `@signal-app/core`'s `editor/*` family into its own package. Mirrors `@signal-app/core`'s `editor/tempo` in shape (a DTO, thin primitives, composed mutators built from those primitives, an Editor facade class), scoped to a single track and a single `ValueEventType` (`pitchBend`, or `controller` with a specific `controllerType`).
-
-## Why a separate package
-
-`editor/control` used to live inside `@signal-app/core` next to `editor/tempo`. Both domains needed a `Control`/`Tempo` prefix on every mutation/query (`removeControlItems`, `addControlItem`, ...) purely to avoid colliding with each other inside one shared export namespace. Moving control-editing into its own package removes that need — names here are just `removeItems`, `addItem`, `moveItems`, and so on.
+Editor facade for pitchBend/controller automation lanes, scoped to a single track and a single `ValueEventType` (`pitchBend`, or `controller` with a specific `controllerType`). Shape mirrors `@signal-app/tempo-editor`: a DTO, thin primitives, composed mutators built from those primitives, and an Editor facade class.
 
 ## Responsibilities
 
 - `ControlItem` DTO (`{id, tick, value}`) so React never has to branch on `ControllerEvent` vs `PitchBendEvent` — a `ControlEditor` is already bound to one `ValueEventType` at construction.
-- `createControlEditor(track, type): ControlEditor` — the public constructor, and the only place query/mutator functions are invoked. It builds a `TrackControlEditor` and binds every query/mutator (`addItem`, `removeItems`, `pasteItemsAtPosition`, `getItemsClipboardData`, ...) directly to it as top-level methods, so it is a facade: `TrackControlEditor` itself does not expose `query`/`mutate`, and is not exported — callers only ever see the plain-method `ControlEditor` interface returned by `createControlEditor`.
+- `createControlEditor(track, type): ControlEditor` — the public constructor, and the only place query/mutator functions are invoked. It builds a `TrackControlEditor` and binds every query/mutator (`addItem`, `removeItems`, `pasteItemsAtPosition`, `getItemsClipboardData`, ...) directly to it as top-level methods. `TrackControlEditor` itself does not expose `query`/`mutate`, and is not exported — callers only ever see the plain-method `ControlEditor` interface returned by `createControlEditor`.
 - `mutations/primitives.ts` (`addItem`/`removeItem`/`updateItem`) — thin, single-item operations, the only functions allowed to unsafely cast the branded mutator context back to the editor.
 - `mutations/composed.ts` — everything built from those primitives: `removeItems`, `moveItems`, `removeRedundantItems`, `duplicateItems`, `createOrUpdateItemValue`, `updateItemsInRange(WithEasing)`, `pasteItemsAtPosition`.
 - `queries/primitives.ts` / `queries/items.ts` — the read-side counterpart (`getItems`, `getItemById`, `getValueEventType`, `listItems`, `getItemsByIds`, `getItemsClipboardData`, `getItemsInRangeWithPrevious`).
