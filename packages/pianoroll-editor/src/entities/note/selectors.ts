@@ -1,6 +1,6 @@
+import { Range } from "@signal-app/core"
 import { maxBy, minBy } from "lodash"
-import { NoteEvent } from "../../../../core/src/entities/event"
-import { Range } from "../../../../core/src/entities/geometry/Range"
+import { NoteEvent } from "./NoteEvent"
 
 export const getNotesDuration = (
   notes: readonly { tick: number; duration: number }[],
