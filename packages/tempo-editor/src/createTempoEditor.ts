@@ -29,12 +29,14 @@ export const createTempoEditor = (conductorTrack: Track) => {
     (...args: A) =>
       fn(...args)(editor)
 
+  // Each mutation runs in a transaction so a composed mutation that touches
+  // many items emits one change notification instead of one per item.
   const bindMutation =
     <A extends unknown[], R>(
       fn: (...args: A) => TempoEditorMutator<R>,
     ): ((...args: A) => R) =>
     (...args: A) =>
-      fn(...args)(editor)
+      conductorTrack.transaction(() => fn(...args)(editor))
 
   return {
     observeItems: editor.observeItems,

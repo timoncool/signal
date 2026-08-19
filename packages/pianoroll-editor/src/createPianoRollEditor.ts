@@ -33,12 +33,14 @@ export const createPianoRollEditor = (track: Track) => {
     (...args: A) =>
       fn(...args)(editor)
 
+  // Each mutation runs in a transaction so a composed mutation that touches
+  // many notes emits one change notification instead of one per note.
   const bindMutation =
     <A extends unknown[], R>(
       fn: (...args: A) => PianoRollEditorMutator<R>,
     ): ((...args: A) => R) =>
     (...args: A) =>
-      fn(...args)(editor)
+      track.transaction(() => fn(...args)(editor))
 
   return {
     updateTickRange: editor.updateTickRange,
