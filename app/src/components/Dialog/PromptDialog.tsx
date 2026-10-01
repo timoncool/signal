@@ -31,6 +31,17 @@ export const PromptDialog: FC<PromptProps> = (props) => {
     <Dialog open={true} onOpenChange={onCancel} style={{ width: "20rem" }}>
       <DialogTitle>{props.title}</DialogTitle>
       <DialogContent>
+        {props.message && (
+          <p
+            style={{
+              margin: "0 0 0.75rem",
+              fontSize: "0.8rem",
+              color: "var(--color-text-secondary)",
+            }}
+          >
+            {props.message}
+          </p>
+        )}
         <TextField
           type="text"
           value={input}

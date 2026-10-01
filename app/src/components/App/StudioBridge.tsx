@@ -62,6 +62,9 @@ export const StudioBridge: FC = () => {
       while (synth.loadedSoundFont === null && Date.now() < deadline) {
         await new Promise((resolve) => setTimeout(resolve, 200))
       }
+      if (synth.loadedSoundFont === null) {
+        throw new Error("The SoundFont did not load. Reopen the MIDI editor and try again.")
+      }
     }
 
     const onMessage = async (event: MessageEvent<StudioMessage>) => {
@@ -81,13 +84,16 @@ export const StudioBridge: FC = () => {
             undefined,
             message.name,
           )
-          if (message.name) song.name = message.name
+          song.name = message.name
+          // naming the song counts as an edit to signal
+          song.isSaved = true
           setSong(song)
           break
         }
         case "new": {
           const song = emptySong()
           song.name = message.name
+          song.isSaved = true
           setSong(song)
           break
         }

@@ -371,6 +371,17 @@ export default {
     "operation-set": "Set",
     "operation-add": "Add",
     "operation-multiply": "Multiply",
+    /* Score lanes */
+    "score-chords": "Chords",
+    "score-sections": "Sections",
+    "score-chord": "Chord",
+    "score-chord-hint":
+      "A chord symbol such as C, Am7, F#m7b5 or G/B. Leave it empty to remove the chord.",
+    "score-chord-unknown": "Not a chord symbol the score knows",
+    "score-section": "Section",
+    "score-section-hint":
+      "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental or Outro, a number may follow. Leave it empty to remove the section.",
+    "score-section-unknown": "Not a section the score knows",
   },
   fr: {
     "piano-roll": "Rouleau de piano",
@@ -746,6 +757,17 @@ export default {
     "operation-set": "Mêttre",
     "operation-add": "Ajouter",
     "operation-multiply": "Multiplier",
+    /* Score lanes */
+    "score-chords": "Accords",
+    "score-sections": "Sections",
+    "score-chord": "Accord",
+    "score-chord-hint":
+      "Un symbole d'accord, par exemple C, Am7, F#m7b5 ou G/B. Laissez vide pour enlever l'accord.",
+    "score-chord-unknown": "Symbole d'accord non reconnu par la partition",
+    "score-section": "Section",
+    "score-section-hint":
+      "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental ou Outro, éventuellement suivi d'un numéro. Laissez vide pour enlever la section.",
+    "score-section-unknown": "Section non reconnue par la partition",
   },
   ja: {
     "piano-roll": "ピアノロール",
@@ -1115,6 +1137,17 @@ export default {
     "operation-set": "変更",
     "operation-add": "加算",
     "operation-multiply": "乗算",
+    /* Score lanes */
+    "score-chords": "コード",
+    "score-sections": "セクション",
+    "score-chord": "コード",
+    "score-chord-hint":
+      "C、Am7、F#m7b5、G/B などのコードネームを入力します。空にするとコードを削除します。",
+    "score-chord-unknown": "譜面が認識できないコードネームです",
+    "score-section": "セクション",
+    "score-section-hint":
+      "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental、Outro のいずれかで、後ろに番号を付けられます。空にするとセクションを削除します。",
+    "score-section-unknown": "譜面が認識できないセクションです",
   },
   "zh-Hans": {
     "piano-roll": "钢琴卷",
@@ -1485,6 +1518,16 @@ export default {
     "operation-set": "Set",
     "operation-add": "Add",
     "operation-multiply": "Multiply",
+    /* Score lanes */
+    "score-chords": "和弦",
+    "score-sections": "段落",
+    "score-chord": "和弦",
+    "score-chord-hint": "和弦符号，例如C、Am7、F#m7b5或G/B。留空则删除该和弦。",
+    "score-chord-unknown": "乐谱无法识别该和弦符号",
+    "score-section": "段落",
+    "score-section-hint":
+      "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental或Outro，后面可加数字。留空则删除该段落。",
+    "score-section-unknown": "乐谱无法识别该段落",
   },
   "zh-Hant": {
     "piano-roll": "鋼琴卷軸",
@@ -1854,6 +1897,16 @@ export default {
     "operation-set": "Set",
     "operation-add": "Add",
     "operation-multiply": "Multiply",
+    /* Score lanes */
+    "score-chords": "和弦",
+    "score-sections": "段落",
+    "score-chord": "和弦",
+    "score-chord-hint": "和弦符號，例如C、Am7、F#m7b5或G/B。留空則移除該和弦。",
+    "score-chord-unknown": "樂譜無法辨識此和弦符號",
+    "score-section": "段落",
+    "score-section-hint":
+      "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental或Outro，後面可加數字。留空則移除該段落。",
+    "score-section-unknown": "樂譜無法辨識此段落",
   },
   sk: {
     "piano-roll": "Piano Roll",
@@ -2225,6 +2278,17 @@ export default {
     "operation-set": "Nastaviť",
     "operation-add": "Pridať",
     "operation-multiply": "Násobiť",
+    /* Score lanes */
+    "score-chords": "Akordy",
+    "score-sections": "Sekcie",
+    "score-chord": "Akord",
+    "score-chord-hint":
+      "Akordová značka, napríklad C, Am7, F#m7b5 alebo G/B. Prázdne pole akord odstráni.",
+    "score-chord-unknown": "Partitúra nepozná túto akordovú značku",
+    "score-section": "Sekcia",
+    "score-section-hint":
+      "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental alebo Outro, môže nasledovať číslo. Prázdne pole sekciu odstráni.",
+    "score-section-unknown": "Partitúra nepozná túto sekciu",
   },
   ru: {
     "piano-roll": "Пиано-ролл",
@@ -2596,6 +2660,17 @@ export default {
     "operation-set": "Задать",
     "operation-add": "Прибавить",
     "operation-multiply": "Умножить",
+    /* Score lanes */
+    "score-chords": "Аккорды",
+    "score-sections": "Секции",
+    "score-chord": "Аккорд",
+    "score-chord-hint":
+      "Символ аккорда: C, Am7, F#m7b5, G/B. Пусто — убрать аккорд.",
+    "score-chord-unknown": "Партитура не знает такого аккорда",
+    "score-section": "Секция",
+    "score-section-hint":
+      "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental или Outro, можно с номером. Пусто — убрать секцию.",
+    "score-section-unknown": "Партитура не знает такой секции",
   },
   ko: {
     "piano-roll": "피아노 롤",
@@ -2965,5 +3040,16 @@ export default {
     "operation-set": "설정",
     "operation-add": "더하기",
     "operation-multiply": "곱하기",
+    /* Score lanes */
+    "score-chords": "코드",
+    "score-sections": "섹션",
+    "score-chord": "코드",
+    "score-chord-hint":
+      "C, Am7, F#m7b5, G/B 같은 코드 기호를 입력하세요. 비워 두면 코드가 제거됩니다.",
+    "score-chord-unknown": "악보가 인식하지 못하는 코드 기호입니다",
+    "score-section": "섹션",
+    "score-section-hint":
+      "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental, Outro 중 하나이며 뒤에 숫자를 붙일 수 있습니다. 비워 두면 섹션이 제거됩니다.",
+    "score-section-unknown": "악보가 인식하지 못하는 섹션입니다",
   },
 } as const
