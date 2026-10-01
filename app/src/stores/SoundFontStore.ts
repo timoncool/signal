@@ -2,7 +2,7 @@ import { SoundFont, SoundFontSynth } from "@signal-app/player"
 import { makeObservable, observable } from "mobx"
 import { makePersistable } from "mobx-persist-store"
 import { basename } from "../helpers/path"
-import { isRunningInElectron } from "../helpers/platform"
+import { isRunningInElectron, isRunningInStudio } from "../helpers/platform"
 import { IndexedDBStorage } from "../services/IndexedDBStorage"
 
 interface LocalSoundFont {
@@ -45,7 +45,9 @@ const defaultSoundFonts: (SoundFontItem & Metadata & { id: number })[] =
           id: -999, // Use negative number to avoid conflict with user saved soundfonts
           type: "remote",
           name: "A320U.sf2 (Signal Factory Sound)",
-          url: "https://cdn.jsdelivr.net/gh/ryohey/signal@4569a31/public/A320U.sf2",
+          url: isRunningInStudio()
+            ? new URL("soundfonts/A320U.sf2", window.location.href).href
+            : "https://cdn.jsdelivr.net/gh/ryohey/signal@4569a31/public/A320U.sf2",
         },
       ]
 

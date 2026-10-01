@@ -5,6 +5,7 @@ import {
   connectFirestoreEmulator,
   getFirestore,
 } from "firebase/firestore"
+import { isRunningInStudio } from "../helpers/platform"
 import {
   Functions,
   connectFunctionsEmulator,
@@ -22,6 +23,9 @@ const firebaseConfig = {
 
 const modules = (() => {
   try {
+    if (isRunningInStudio()) {
+      throw new Error("the cloud is off inside a studio")
+    }
     const app = initializeApp(firebaseConfig)
     const auth = getAuth(app)
     const firestore = getFirestore(app)

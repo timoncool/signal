@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react"
 import { useSetSong } from "../../actions"
 import { useLoadSongFromExternalMidiFile } from "../../actions/cloudSong"
 import { songFromArrayBuffer } from "../../actions/file"
-import { isRunningInElectron } from "../../helpers/platform"
+import { isRunningInElectron, isRunningInStudio } from "../../helpers/platform"
 import { useAutoSave } from "../../hooks/useAutoSave"
 import { useStores } from "../../hooks/useStores"
 import { useLocalization } from "../../localize/useLocalization"
@@ -73,6 +73,10 @@ export const OnInit: FC = () => {
   }
 
   const checkAutoSave = async () => {
+    if (isRunningInStudio()) {
+      return
+    }
+
     // Skip auto save restore if external file loading is present
     const params = new URLSearchParams(window.location.search)
     const openParam = params.get("open")

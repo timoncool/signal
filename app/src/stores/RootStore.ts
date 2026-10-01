@@ -1,6 +1,6 @@
 import { CommandService } from "@signal-app/core"
 import { Player, SoundFont, SoundFontSynth } from "@signal-app/player"
-import { isRunningInElectron } from "../helpers/platform"
+import { isRunningInElectron, isRunningInStudio } from "../helpers/platform"
 import { EventSource } from "../player/EventSource"
 import { AutoSaveService } from "../services/AutoSaveService"
 import { GroupOutput } from "../services/GroupOutput"
@@ -71,7 +71,9 @@ export default class RootStore {
     await this.synth.setup()
     await this.soundFontStore.init()
     this.setupMetronomeSynth()
-    this.autoSaveService.startAutoSave()
+    if (!isRunningInStudio()) {
+      this.autoSaveService.startAutoSave()
+    }
     this.bluetoothMIDIDeviceStore.autoConnect()
   }
 
@@ -87,8 +89,9 @@ async function loadMetronomeSoundFontData() {
       "./assets/soundfonts/A320U_drums.sf2",
     )
   }
-  const soundFontURL =
-    "https://cdn.jsdelivr.net/gh/ryohey/signal@6959f35/public/A320U_drums.sf2"
+  const soundFontURL = isRunningInStudio()
+    ? "soundfonts/A320U_drums.sf2"
+    : "https://cdn.jsdelivr.net/gh/ryohey/signal@6959f35/public/A320U_drums.sf2"
   const response = await fetch(soundFontURL)
   const data = await response.arrayBuffer()
   return data

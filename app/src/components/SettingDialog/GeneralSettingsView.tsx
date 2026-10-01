@@ -25,6 +25,8 @@ const LanguageSelect: FC = () => {
     { label: "English", language: "en" },
     { label: "French", language: "fr" },
     { label: "Japanese", language: "ja" },
+    { label: "Korean", language: "ko" },
+    { label: "Russian", language: "ru" },
     { label: "Slovak", language: "sk" },
     { label: "Chinese (Simplified)", language: "zh-Hans" },
     { label: "Chinese (Traditional)", language: "zh-Hant" },

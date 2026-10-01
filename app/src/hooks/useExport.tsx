@@ -19,6 +19,9 @@ export function useExport() {
     get exportSong() {
       return useExportSong()
     },
+    get renderSong() {
+      return useRenderSong()
+    },
     setOpenExportProgressDialog: useSetAtom(openExportProgressDialogAtom),
     cancelExport: useSetAtom(cancelExportAtom),
   }
@@ -37,11 +40,14 @@ const cancelExportAtom = atom(null, (_get, set) => {
 const waitForAnimationFrame = () =>
   new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
 
-const useExportSong = () => {
+export class ExportError extends Error {}
+
+// The song played through the loaded SoundFont and encoded; the progress
+// dialog shows while it renders and can cancel it.
+const useRenderSong = () => {
   const { synth } = useStores()
   const { updateEndOfSong, getSong, timebase } = useSong()
   const localized = useLocalization()
-  const dialog = useDialog()
   const setOpenDialog = useSetAtom(openExportProgressDialogAtom)
   const setProgress = useSetAtom(progressAtom)
   const setCanceled = useSetAtom(isCanceledAtom)
@@ -51,17 +57,12 @@ const useExportSong = () => {
     updateEndOfSong()
 
     if (!canExport(getSong())) {
-      await dialog.show({
-        title: localized["export"],
-        message: localized["export-error-too-short"],
-        actions: [{ title: "OK", key: "ok" }],
-      })
-      return
+      throw new ExportError(localized["export-error-too-short"])
     }
 
     const soundFontData = synth.loadedSoundFont?.data
     if (soundFontData === undefined) {
-      return
+      throw new Error("No SoundFont is loaded")
     }
 
     const sampleRate = 44100
@@ -88,11 +89,31 @@ const useExportSong = () => {
 
       const encoder = getEncoder(format)
       const audioData = await encoder.encode(audioBuffer)
-
-      const blob = new Blob([audioData as any], { type: encoder.mimeType })
+      return new Blob([audioData as any], { type: encoder.mimeType })
+    } finally {
       setOpenDialog(false)
-      downloadBlob(blob, "song." + encoder.ext)
+    }
+  }
+}
+
+const useExportSong = () => {
+  const renderSong = useRenderSong()
+  const localized = useLocalization()
+  const dialog = useDialog()
+
+  return async (format: "WAV" | "MP3") => {
+    try {
+      const blob = await renderSong(format)
+      downloadBlob(blob, "song." + getEncoder(format).ext)
     } catch (e) {
+      if (e instanceof ExportError) {
+        await dialog.show({
+          title: localized["export"],
+          message: e.message,
+          actions: [{ title: "OK", key: "ok" }],
+        })
+        return
+      }
       console.warn(e)
     }
   }

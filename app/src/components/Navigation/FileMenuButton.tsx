@@ -4,6 +4,7 @@ import CloudOutlined from "mdi-react/CloudOutlineIcon"
 import KeyboardArrowDown from "mdi-react/KeyboardArrowDownIcon"
 import { FC, useCallback, useState } from "react"
 import { hasFSAccess } from "../../actions/file"
+import { isRunningInStudio } from "../../helpers/platform"
 import { useAuth } from "../../hooks/useAuth"
 import { useExport } from "../../hooks/useExport"
 import { useRootView } from "../../hooks/useRootView"
@@ -52,7 +53,7 @@ export const FileMenuButton: FC = () => {
 
       {user && <CloudFileMenu close={handleClose} />}
 
-      {user === null && (
+      {user === null && !isRunningInStudio() && (
         <>
           <MenuDivider />
           <MenuItem

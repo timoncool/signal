@@ -3,7 +3,11 @@ import Forum from "mdi-react/ForumIcon"
 import Help from "mdi-react/HelpCircleIcon"
 import Settings from "mdi-react/SettingsIcon"
 import { CSSProperties, FC, MouseEvent, useCallback } from "react"
-import { getPlatform, isRunningInElectron } from "../../helpers/platform"
+import {
+  getPlatform,
+  isRunningInElectron,
+  isRunningInStudio,
+} from "../../helpers/platform"
 import { useRootView } from "../../hooks/useRootView"
 import { useRouter } from "../../hooks/useRouter"
 import ArrangeIcon from "../../images/icons/arrange.svg"
@@ -206,22 +210,24 @@ export const Navigation: FC = () => {
             </TabTitle>
           </Tab>
 
-          <Tab>
-            <Forum style={IconStyle} />
-            <TabTitle>
-              <a
-                href="https://discord.gg/XQxzNdDJse"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Discord
-              </a>
-            </TabTitle>
-          </Tab>
+          {!isRunningInStudio() && (
+            <Tab>
+              <Forum style={IconStyle} />
+              <TabTitle>
+                <a
+                  href="https://discord.gg/XQxzNdDJse"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Discord
+                </a>
+              </TabTitle>
+            </Tab>
+          )}
         </>
       )}
 
-      <UserButton />
+      {!isRunningInStudio() && <UserButton />}
     </Container>
   )
 }

@@ -7,7 +7,7 @@ import {
 import React from "react"
 import { HelmetProvider } from "react-helmet-async"
 import { ActionDialog } from "../../components/Dialog/ActionDialog"
-import { isRunningInElectron } from "../../helpers/platform"
+import { isRunningInElectron, isRunningInStudio } from "../../helpers/platform"
 import { ArrangeViewProvider } from "../../hooks/useArrangeView"
 import { AuthProvider } from "../../hooks/useAuth"
 import { PianoRollProvider } from "../../hooks/usePianoRoll"
@@ -23,6 +23,7 @@ import { GlobalCSS } from "../Theme/GlobalCSS"
 import { Toast } from "../ui/Toast"
 import { ElectronCallbackHandler } from "./ElectronCallbackHandler"
 import { LocalizationProvider } from "./LocalizationProvider"
+import { StudioBridge } from "./StudioBridge"
 
 const rootStore = new RootStore()
 
@@ -46,6 +47,7 @@ export function App() {
                                 {isRunningInElectron() && (
                                   <ElectronCallbackHandler />
                                 )}
+                                {isRunningInStudio() && <StudioBridge />}
                                 <RootView />
                               </TempoEditorProvider>
                             </ArrangeViewProvider>

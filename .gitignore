@@ -49,3 +49,6 @@ dist
 
 # JetBrains data
 .idea
+
+# the studio build
+app/dist-studio
