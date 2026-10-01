@@ -1,3 +1,4 @@
+import { studioCanvasAttributes } from "../../../helpers/studioCanvas"
 import { useTheme } from "@emotion/react"
 import { GLCanvas, Transform } from "@ryohey/webgl-react"
 import { FC, useMemo } from "react"
@@ -37,6 +38,7 @@ export const VelocityControlCanvas: FC<{ width: number; height: number }> = ({
 
   return (
     <GLCanvas
+      contextAttributes={studioCanvasAttributes}
       width={width}
       height={height}
       style={style}

@@ -1,3 +1,4 @@
+import { studioCanvasAttributes } from "../../../helpers/studioCanvas"
 import { useTheme } from "@emotion/react"
 import { GLCanvas, Transform } from "@ryohey/webgl-react"
 import { isEventInRange, Range, TrackEventOf } from "@signal-app/core"
@@ -150,6 +151,7 @@ export const LineGraphCanvas = <T extends ControllerEvent | PitchBendEvent>({
     <>
       <div style={{ position: "relative" }}>
         <GLCanvas
+          contextAttributes={studioCanvasAttributes}
           width={width}
           height={height}
           onMouseDown={onMouseDown}

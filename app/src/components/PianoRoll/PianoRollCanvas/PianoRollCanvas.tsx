@@ -1,3 +1,4 @@
+import { studioCanvasAttributes } from "../../../helpers/studioCanvas"
 import { useTheme } from "@emotion/react"
 import { GLCanvas, Transform } from "@ryohey/webgl-react"
 import { FC, MouseEventHandler, useCallback, useEffect, useMemo } from "react"
@@ -85,6 +86,7 @@ export const PianoRollCanvas: FC<PianoRollCanvasProps> = ({
   return (
     <>
       <GLCanvas
+        contextAttributes={studioCanvasAttributes}
         width={width}
         height={height}
         cursor={mouseMode === "pencil" ? "auto" : "crosshair"}

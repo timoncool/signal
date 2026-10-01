@@ -118,6 +118,29 @@ export function sectionsOf(song: Song): LaneSection[] {
     .sort((a, b) => a.tick - b.tick)
 }
 
+/** Repeat a chord edit only where the same named section still has the same
+ * harmony and duration. A deliberately different repeat remains untouched. */
+export function repeatedChordTicks(song: Song, tick: number): number[] {
+  const sections = sectionsOf(song)
+  const index = sections.filter((section) => section.tick <= tick).length - 1
+  if (index < 0) return [tick]
+  const source = sections[index]
+  const stop = sections[index + 1]?.tick ?? song.endOfSong
+  const length = stop - source.tick
+  const offset = tick - source.tick
+  const kind = (name: string) => name.toLowerCase().trim().replace(/[\s._-]*\d+$/, "")
+  const chords = chordsOf(song)
+  const pattern = (start: number, end: number) => JSON.stringify(chords
+    .filter((chord) => chord.tick < end && chord.end > start)
+    .map((chord) => [Math.max(chord.tick, start) - start, Math.min(chord.end, end) - start, chord.name]))
+  const original = pattern(source.tick, stop)
+  return [tick, ...sections.flatMap((section, other) => {
+    const end = sections[other + 1]?.tick ?? song.endOfSong
+    return other !== index && kind(section.name) === kind(source.name) && end - section.tick === length && offset < length && pattern(section.tick, end) === original
+      ? [section.tick + offset] : []
+  })]
+}
+
 /** The bar a tick falls in: its first tick and its length. */
 export const barAt = (song: Song, tick: number) => {
   const bar = Measure.getMeasureStart(song.measures, tick, song.timebase)

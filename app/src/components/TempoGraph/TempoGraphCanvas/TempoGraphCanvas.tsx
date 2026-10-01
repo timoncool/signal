@@ -1,3 +1,4 @@
+import { studioCanvasAttributes } from "../../../helpers/studioCanvas"
 import { GLCanvas, Transform } from "@ryohey/webgl-react"
 import { CSSProperties, FC, useCallback, useMemo } from "react"
 import { matrixFromTranslation } from "../../../helpers/matrix"
@@ -71,6 +72,7 @@ export const TempoGraphCanvas: FC<TempoGraphCanvasProps> = ({
 
   return (
     <GLCanvas
+      contextAttributes={studioCanvasAttributes}
       width={width}
       height={height}
       onMouseDown={onMouseDownGraph}

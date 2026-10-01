@@ -1,3 +1,4 @@
+import { studioCanvasAttributes } from "../../../helpers/studioCanvas"
 import { useTheme } from "@emotion/react"
 import { GLCanvas, Transform } from "@ryohey/webgl-react"
 import { FC, useCallback, useMemo } from "react"
@@ -67,6 +68,7 @@ export const ArrangeViewCanvas: FC<ArrangeViewCanvasProps> = ({
 
   return (
     <GLCanvas
+      contextAttributes={studioCanvasAttributes}
       width={width}
       height={height}
       onMouseDown={onMouseDown}

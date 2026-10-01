@@ -1,12 +1,12 @@
 import { useTheme } from "@emotion/react"
 import styled from "@emotion/styled"
 import { usePrompt, useToast } from "dialog-hooks"
-import React, { FC, useCallback } from "react"
+import React, { FC, useCallback, useState } from "react"
 import { useHistory } from "../../hooks/useHistory"
 import { useMobxSelector } from "../../hooks/useMobxSelector"
 import { useStores } from "../../hooks/useStores"
 import { useTickScroll } from "../../hooks/useTickScroll"
-import { Localized, useLocalization } from "../../localize/useLocalization"
+import { Localized, useCurrentLanguage, useLocalization } from "../../localize/useLocalization"
 import { chordPitches } from "../../studio/chordSymbols"
 import {
   barAt,
@@ -14,6 +14,7 @@ import {
   isSectionName,
   removeChord,
   removeSection,
+  repeatedChordTicks,
   sectionsOf,
   setChord,
   setSection,
@@ -98,6 +99,10 @@ function drawSpan(
 }
 
 export const ScoreLanes: FC<{ keyWidth: number }> = ({ keyWidth }) => {
+  const [repeatChords, setRepeatChords] = useState(false)
+  const language = useCurrentLanguage()
+  const repeatLabels: Record<string, string> = { en: "Repeat chord edits in matching sections", ru: "Повторять правки аккордов в совпадающих секциях", ja: "一致するセクションにもコード編集を反映", "zh-Hans": "将和弦编辑同步到匹配的段落", "zh-Hant": "將和弦編輯同步到相同的段落", ko: "일치하는 섹션에 코드 편집 반복" }
+  const repeatTitle = repeatLabels[language] ?? repeatLabels.en
   const theme = useTheme()
   const { songStore } = useStores()
   const { canvasWidth: width, scrollLeft, transform } = useTickScroll()
@@ -157,10 +162,11 @@ export const ScoreLanes: FC<{ keyWidth: number }> = ({ keyWidth }) => {
     const beat = barAt(song, tick).beat
     const onset = Math.floor(tick / beat) * beat
     const here = lanes.chords.find((chord) => chord.tick === onset)
+    const targets = repeatChords ? repeatedChordTicks(song, onset) : [onset]
     if (remove) {
       if (!here) return
       pushHistory()
-      removeChord(song, here.tick)
+      targets.forEach((target) => removeChord(song, target))
       return
     }
     const text = await prompt.show({
@@ -175,7 +181,7 @@ export const ScoreLanes: FC<{ keyWidth: number }> = ({ keyWidth }) => {
     if (symbol === "") {
       if (!here) return
       pushHistory()
-      removeChord(song, onset)
+      targets.forEach((target) => removeChord(song, target))
       return
     }
     const pitches = chordPitches(symbol)
@@ -184,7 +190,7 @@ export const ScoreLanes: FC<{ keyWidth: number }> = ({ keyWidth }) => {
       return
     }
     pushHistory()
-    setChord(song, onset, pitches)
+    targets.forEach((target) => setChord(song, target, pitches))
   }
 
   const editSection = async (tick: number, remove: boolean) => {
@@ -237,6 +243,7 @@ export const ScoreLanes: FC<{ keyWidth: number }> = ({ keyWidth }) => {
     <Container>
       <Labels style={{ width: keyWidth }}>
         <div>
+          <input type="checkbox" checked={repeatChords} onChange={(event) => setRepeatChords(event.target.checked)} aria-label={repeatTitle} title={repeatTitle} style={{ margin: "0 3px 0 0", verticalAlign: "middle" }} />
           <Localized name="score-chords" />
         </div>
         <div>
