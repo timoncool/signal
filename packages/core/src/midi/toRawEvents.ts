@@ -33,8 +33,15 @@ const fromSignalEvent = (e: TrackEvent): TrackEvent => {
   return e
 }
 
+// midifile-ts writes nothing for a meta or channel event it has no code for,
+// and its delta time goes with it, so every later event would land earlier.
+// Such events (Reaper's notation metas among them) are left out before the
+// deltas are counted.
+const writable = (e: TrackEvent) =>
+  !("subtype" in e && e.subtype === "unknown" && (e.type === "meta" || e.type === "channel"))
+
 export function toRawEvents(events: readonly TrackEvent[]): AnyEvent[] {
-  const a = flatten(events.map(fromSignalEvent).map(deassembleNote))
+  const a = flatten(events.filter(writable).map(fromSignalEvent).map(deassembleNote))
   const c = addDeltaTime(a)
   return c as AnyEvent[]
 }

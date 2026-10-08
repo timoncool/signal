@@ -25,6 +25,18 @@ const reassignIDs = (track: Track) => {
 }
 
 describe("SongFile", () => {
+
+  it("keeps the time of every event after a meta event it cannot write", () => {
+    const song = emptySong()
+    const track = song.tracks[1]
+    track.addEvent<NoteEvent>({ type: "channel", subtype: "note", noteNumber: 60, tick: 0, velocity: 100, duration: 120 })
+    track.addEvent({ type: "meta", subtype: "unknown", data: [78, 79, 84, 69], tick: 240 } as any)
+    track.addEvent<NoteEvent>({ type: "channel", subtype: "note", noteNumber: 62, tick: 240, velocity: 100, duration: 120 })
+    track.addEvent<NoteEvent>({ type: "channel", subtype: "note", noteNumber: 64, tick: 480, velocity: 100, duration: 120 })
+    const read = songFromMidi(songToMidi(song))
+    const notes = read.tracks[1].events.filter((e) => "noteNumber" in e) as NoteEvent[]
+    expect(notes.map((n) => [n.noteNumber, n.tick])).toStrictEqual([[60, 0], [62, 240], [64, 480]])
+  })
   it("write and read", () => {
     const song = emptySong()
     song.tracks[1].addEvent<NoteEvent>({
