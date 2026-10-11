@@ -98,13 +98,14 @@ const useRenderSong = () => {
 
 const useExportSong = () => {
   const renderSong = useRenderSong()
+  const { name } = useSong()
   const localized = useLocalization()
   const dialog = useDialog()
 
   return async (format: "WAV" | "MP3") => {
     try {
       const blob = await renderSong(format)
-      downloadBlob(blob, "song." + getEncoder(format).ext)
+      downloadBlob(blob, `${name.trim() || "song"}.${getEncoder(format).ext}`)
     } catch (e) {
       if (e instanceof ExportError) {
         await dialog.show({
