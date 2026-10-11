@@ -6,5 +6,6 @@ export function downloadSongAsMidi(song: Song) {
   const blob = new Blob([new Uint8Array(bytes)], {
     type: "application/octet-stream",
   })
-  downloadBlob(blob, song.filepath.length > 0 ? song.filepath : "no name.mid")
+  const named = song.name.trim().length > 0 ? `${song.name.trim()}.mid` : "no name.mid"
+  downloadBlob(blob, song.filepath.length > 0 ? song.filepath : named)
 }
