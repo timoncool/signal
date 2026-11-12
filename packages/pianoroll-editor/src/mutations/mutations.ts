@@ -66,3 +66,64 @@ export const quantizeNotes =
       map(quantizeNote(quantizeRound)),
       updateNotes(editor),
     )(editor)
+
+// splits each note that spans `atTick` in two there: the first part ends at
+// it, the second starts at it, with the same pitch and velocity; a note that
+// does not span it is left alone. Answers the ids of both parts.
+export const splitNotes =
+  (
+    noteIds: readonly number[],
+    atTick: number,
+  ): PianoRollEditorMutator<readonly number[]> =>
+  (editor) =>
+    getNotesByIds(noteIds)(editor).flatMap((note) => {
+      const end = note.tick + note.duration
+      if (atTick <= note.tick || atTick >= end) {
+        return []
+      }
+      editor.updateNote({ id: note.id, duration: atTick - note.tick })
+      const second = editor.addNote({
+        tick: atTick,
+        duration: end - atTick,
+        noteNumber: note.noteNumber,
+        velocity: note.velocity,
+      })
+      return [note.id, second.id]
+    })
+
+// joins the chosen notes of one pitch into one, from the start of the first to
+// the end of the last, with the first one's velocity. A pitch whose span holds
+// a note of that pitch that is not chosen is left alone: the joined note would
+// cover it. Answers the ids of the joined notes.
+export const joinNotes =
+  (noteIds: readonly number[]): PianoRollEditorMutator<readonly number[]> =>
+  (editor) => {
+    const chosen = getNotesByIds(noteIds)(editor)
+    const pitches = new Set(chosen.map((note) => note.noteNumber))
+    return [...pitches].flatMap((pitch) => {
+      const notes = chosen
+        .filter((note) => note.noteNumber === pitch)
+        .sort((a, b) => a.tick - b.tick)
+      if (notes.length < 2) {
+        return []
+      }
+      const first = notes[0]
+      const end = Math.max(...notes.map((note) => note.tick + note.duration))
+      const ids = new Set(notes.map(toId))
+      const covered = editor
+        .getAllNotes()
+        .some(
+          (other) =>
+            other.noteNumber === pitch &&
+            !ids.has(other.id) &&
+            other.tick < end &&
+            other.tick + other.duration > first.tick,
+        )
+      if (covered) {
+        return []
+      }
+      editor.updateNote({ id: first.id, duration: end - first.tick })
+      notes.slice(1).forEach((note) => editor.removeNote(note.id))
+      return [first.id]
+    })
+  }

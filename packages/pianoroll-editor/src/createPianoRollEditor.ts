@@ -6,8 +6,10 @@ import {
   addClipboardNotes,
   cloneNotes,
   duplicateNotes,
+  joinNotes,
   quantizeNotes,
   removeNotes,
+  splitNotes,
   transposeNotes,
   updateNotes,
 } from "./mutations"
@@ -65,6 +67,8 @@ export const createPianoRollEditor = (song: Song, trackId: TrackId) => {
     duplicateNotes: bindMutation(duplicateNotes),
     quantizeNotes: bindMutation(quantizeNotes),
     removeNotes: bindMutation(removeNotes),
+    splitNotes: bindMutation(splitNotes),
+    joinNotes: bindMutation(joinNotes),
     transposeNotes: bindMutation(transposeNotes),
     batchUpdateNotesVelocity: track.batchUpdateNotesVelocity,
   }

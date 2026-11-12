@@ -384,6 +384,8 @@ export default {
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental or Outro, a number may follow. Leave it empty to remove the section.",
     "score-section-unknown": "Not a section the score knows",
     "set-value": "Set Value",
+    "split-notes": "Split Notes",
+    "join-notes": "Join Notes",
   },
   fr: {
     "piano-roll": "Rouleau de piano",
@@ -772,6 +774,8 @@ export default {
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental ou Outro, éventuellement suivi d'un numéro. Laissez vide pour enlever la section.",
     "score-section-unknown": "Section non reconnue par la partition",
     "set-value": "Définir la valeur",
+    "split-notes": "Couper les notes",
+    "join-notes": "Joindre les notes",
   },
   ja: {
     "piano-roll": "ピアノロール",
@@ -1154,6 +1158,8 @@ export default {
       "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental、Outro のいずれかで、後ろに番号を付けられます。空にするとセクションを削除します。",
     "score-section-unknown": "譜面が認識できないセクションです",
     "set-value": "値を設定",
+    "split-notes": "ノートを分割",
+    "join-notes": "ノートを結合",
   },
   "zh-Hans": {
     "piano-roll": "钢琴卷",
@@ -1536,6 +1542,8 @@ export default {
       "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental或Outro，后面可加数字。留空则删除该段落。",
     "score-section-unknown": "乐谱无法识别该段落",
     "set-value": "设置值",
+    "split-notes": "分割音符",
+    "join-notes": "合并音符",
   },
   "zh-Hant": {
     "piano-roll": "鋼琴卷軸",
@@ -1917,6 +1925,8 @@ export default {
       "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental或Outro，後面可加數字。留空則移除該段落。",
     "score-section-unknown": "樂譜無法辨識此段落",
     "set-value": "設定值",
+    "split-notes": "分割音符",
+    "join-notes": "合併音符",
   },
   sk: {
     "piano-roll": "Piano Roll",
@@ -2301,6 +2311,8 @@ export default {
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental alebo Outro, môže nasledovať číslo. Prázdne pole sekciu odstráni.",
     "score-section-unknown": "Partitúra nepozná túto sekciu",
     "set-value": "Nastaviť hodnotu",
+    "split-notes": "Rozdeliť noty",
+    "join-notes": "Spojiť noty",
   },
   ru: {
     "piano-roll": "Пиано-ролл",
@@ -2684,6 +2696,8 @@ export default {
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental или Outro, можно с номером. Пусто — убрать секцию.",
     "score-section-unknown": "Партитура не знает такой секции",
     "set-value": "Задать значение",
+    "split-notes": "Разрезать ноту",
+    "join-notes": "Склеить ноты",
     "select-instrument": "Выбрать инструмент",
   },
   ko: {
@@ -3066,6 +3080,8 @@ export default {
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental, Outro 중 하나이며 뒤에 숫자를 붙일 수 있습니다. 비워 두면 섹션이 제거됩니다.",
     "score-section-unknown": "악보가 인식하지 못하는 섹션입니다",
     "set-value": "값 설정",
+    "split-notes": "노트 나누기",
+    "join-notes": "노트 합치기",
     "select-instrument": "악기 선택",
   },
 } as const

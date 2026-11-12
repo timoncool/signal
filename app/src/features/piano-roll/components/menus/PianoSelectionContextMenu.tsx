@@ -12,15 +12,19 @@ import {
   useCopySelection,
   useDeleteSelection,
   useDuplicateSelection,
+  useJoinSelectedNotes,
   usePasteSelection,
   useQuantizeSelectedNotes,
+  useSplitSelectedNotes,
   useTransposeSelection,
 } from "../../hooks/selection"
 import { usePianoRoll } from "../../hooks/usePianoRoll"
 import { usePianoRollVelocityDialog } from "../../hooks/usePianoRollVelocityDialog"
 
-export const PianoSelectionContextMenu: FC<ContextMenuProps> = React.memo(
-  (props) => {
+export const PianoSelectionContextMenu: FC<
+  ContextMenuProps & { splitTick: number }
+> = React.memo(
+  ({ splitTick, ...props }) => {
     const { selectedNoteIds, setOpenTransposeDialog } = usePianoRoll()
     const { setOpen: setOpenVelocityDialog } = usePianoRollVelocityDialog()
     const isNoteSelected = selectedNoteIds.length > 0
@@ -31,6 +35,16 @@ export const PianoSelectionContextMenu: FC<ContextMenuProps> = React.memo(
     const duplicateSelection = useDuplicateSelection()
     const quantizeSelectedNotes = useQuantizeSelectedNotes()
     const transposeSelection = useTransposeSelection()
+    const splitSelectedNotes = useSplitSelectedNotes()
+    const joinSelectedNotes = useJoinSelectedNotes()
+
+    const onClickSplit = useCallback(() => {
+      splitSelectedNotes(splitTick)
+    }, [splitSelectedNotes, splitTick])
+
+    const onClickJoin = useCallback(() => {
+      joinSelectedNotes()
+    }, [joinSelectedNotes])
 
     const onClickCut = useCallback(() => {
       copySelection()
@@ -107,6 +121,18 @@ export const PianoSelectionContextMenu: FC<ContextMenuProps> = React.memo(
         <MenuItem onClick={onClickTranspose} disabled={!isNoteSelected}>
           <Localized name="transpose" />
           <HotKey>T</HotKey>
+        </MenuItem>
+        <MenuDivider />
+        <MenuItem onClick={onClickSplit} disabled={!isNoteSelected}>
+          <Localized name="split-notes" />
+          <HotKey>{envString.cmdOrCtrl}+E</HotKey>
+        </MenuItem>
+        <MenuItem
+          onClick={onClickJoin}
+          disabled={selectedNoteIds.length < 2}
+        >
+          <Localized name="join-notes" />
+          <HotKey>{envString.cmdOrCtrl}+J</HotKey>
         </MenuItem>
         <MenuDivider />
         <MenuItem onClick={onClickQuantize} disabled={!isNoteSelected}>

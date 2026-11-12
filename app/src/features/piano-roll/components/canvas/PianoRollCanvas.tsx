@@ -7,6 +7,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useState,
 } from "react"
 import { Beats } from "../../../../components/GLNodes/Beats"
 import { Cursor } from "../../../../components/GLNodes/Cursor"
@@ -34,7 +35,9 @@ export const PianoRollCanvas: FC<PianoRollCanvasProps> = ({
 }) => {
   const { ghostTrackIds, mouseMode } = usePianoRoll()
   const beats = useBeats()
-  const { cursorX, setCanvasWidth, scrollLeft } = useTickScroll()
+  const { cursorX, setCanvasWidth, scrollLeft, transform } = useTickScroll()
+  // where the menu was opened: Split cuts the notes there
+  const [menuTick, setMenuTick] = useState(0)
   const { scrollTop, setCanvasHeight } = useKeyScroll()
 
   const mouseHandler = useNoteMouseGesture()
@@ -52,11 +55,14 @@ export const PianoRollCanvas: FC<PianoRollCanvasProps> = ({
 
       if (mouseMode === "selection") {
         e.stopPropagation()
+        setMenuTick(
+          Math.max(0, transform.getTick(e.nativeEvent.offsetX + scrollLeft)),
+        )
         onContextMenu(e)
         return
       }
     },
-    [mouseMode, onContextMenu],
+    [mouseMode, onContextMenu, transform, scrollLeft],
   )
 
   useEffect(() => {
@@ -115,7 +121,7 @@ export const PianoRollCanvas: FC<PianoRollCanvasProps> = ({
           <NoteSelection zIndex={4} />
         </Transform>
       </GLCanvas>
-      <PianoSelectionContextMenu {...menuProps} />
+      <PianoSelectionContextMenu {...menuProps} splitTick={menuTick} />
     </>
   )
 }

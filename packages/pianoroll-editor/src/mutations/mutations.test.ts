@@ -4,8 +4,10 @@ import {
   addNotes,
   cloneNotes,
   duplicateNotes,
+  joinNotes,
   quantizeNotes,
   removeNotes,
+  splitNotes,
   transposeNotes,
   updateNotes,
 } from "./mutations"
@@ -152,5 +154,96 @@ describe("mutations", () => {
     quantizeNotes([note.id], (tick) => Math.floor(tick / 10) * 10)(editor)
 
     expect(editor.getNoteById(note.id)?.tick).toBe(10)
+  })
+
+  it("splitNotes cuts the notes that span the tick in two and leaves the rest", () => {
+    const editor = createTrackNoteMapper()
+    const spanned = editor.addNote({
+      tick: 0,
+      duration: 100,
+      noteNumber: 60,
+      velocity: 90,
+    })
+    const before = editor.addNote({
+      tick: 0,
+      duration: 40,
+      noteNumber: 64,
+      velocity: 80,
+    })
+
+    const parts = splitNotes([spanned.id, before.id], 40)(editor)
+
+    expect(parts).toHaveLength(2)
+    expect(editor.getNoteById(spanned.id)).toMatchObject({
+      tick: 0,
+      duration: 40,
+    })
+    expect(editor.getNoteById(parts[1])).toMatchObject({
+      tick: 40,
+      duration: 60,
+      noteNumber: 60,
+      velocity: 90,
+    })
+    expect(editor.getNoteById(before.id)?.duration).toBe(40)
+  })
+
+  it("joinNotes makes one note of the chosen notes of a pitch, with the first one's velocity", () => {
+    const editor = createTrackNoteMapper()
+    const first = editor.addNote({
+      tick: 0,
+      duration: 30,
+      noteNumber: 60,
+      velocity: 70,
+    })
+    const second = editor.addNote({
+      tick: 50,
+      duration: 50,
+      noteNumber: 60,
+      velocity: 110,
+    })
+    const other = editor.addNote({
+      tick: 10,
+      duration: 10,
+      noteNumber: 62,
+      velocity: 100,
+    })
+
+    const joined = joinNotes([first.id, second.id, other.id])(editor)
+
+    expect(joined).toEqual([first.id])
+    expect(editor.getNoteById(first.id)).toMatchObject({
+      tick: 0,
+      duration: 100,
+      velocity: 70,
+    })
+    expect(editor.getNoteById(second.id)).toBeUndefined()
+    expect(editor.getNoteById(other.id)?.duration).toBe(10)
+  })
+
+  it("joinNotes leaves a pitch alone when a note of it outside the choice lies between", () => {
+    const editor = createTrackNoteMapper()
+    const first = editor.addNote({
+      tick: 0,
+      duration: 20,
+      noteNumber: 60,
+      velocity: 100,
+    })
+    const between = editor.addNote({
+      tick: 30,
+      duration: 10,
+      noteNumber: 60,
+      velocity: 100,
+    })
+    const last = editor.addNote({
+      tick: 60,
+      duration: 20,
+      noteNumber: 60,
+      velocity: 100,
+    })
+
+    expect(joinNotes([first.id, last.id])(editor)).toEqual([])
+    expect(editor.getNoteById(first.id)?.duration).toBe(20)
+    expect(editor.getNoteById(between.id)).toBeDefined()
+    expect(editor.getNoteById(last.id)).toBeDefined()
   })
 })

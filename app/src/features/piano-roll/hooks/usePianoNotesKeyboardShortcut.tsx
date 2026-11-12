@@ -5,10 +5,12 @@ import {
   useCutSelection,
   useDeleteSelection,
   useDuplicateSelection,
+  useJoinSelectedNotes,
   usePasteSelection,
   useQuantizeSelectedNotes,
   useSelectNextNote,
   useSelectPreviousNote,
+  useSplitSelectedNotes,
   useTransposeSelection,
 } from "./selection"
 import { usePianoRoll } from "./usePianoRoll"
@@ -23,6 +25,8 @@ export const usePianoNotesKeyboardShortcut = () => {
   const duplicateSelection = useDuplicateSelection()
   const quantizeSelectedNotes = useQuantizeSelectedNotes()
   const transposeSelection = useTransposeSelection()
+  const splitSelectedNotes = useSplitSelectedNotes()
+  const joinSelectedNotes = useJoinSelectedNotes()
   const { mouseMode, resetSelection } = usePianoRoll()
   const { setOpenTransposeDialog } = usePianoRoll()
 
@@ -47,6 +51,16 @@ export const usePianoNotesKeyboardShortcut = () => {
         code: "KeyD",
         metaKey: true,
         run: duplicateSelection,
+      },
+      {
+        code: "KeyE",
+        metaKey: true,
+        run: () => splitSelectedNotes(),
+      },
+      {
+        code: "KeyJ",
+        metaKey: true,
+        run: joinSelectedNotes,
       },
       {
         code: "KeyQ",
@@ -97,6 +111,8 @@ export const usePianoNotesKeyboardShortcut = () => {
       deleteSelection,
       duplicateSelection,
       quantizeSelectedNotes,
+      splitSelectedNotes,
+      joinSelectedNotes,
       transposeSelection,
       selectNextNote,
       selectPreviousNote,

@@ -219,6 +219,56 @@ export const useQuantizeSelectedNotes = () => {
   }, [selectedNoteIds, pushHistory, pianoRollEditor, forceQuantizeRound])
 }
 
+// cuts the chosen notes at `atTick`, the playhead when it is not given
+export const useSplitSelectedNotes = () => {
+  const { selectedNoteIds, setSelectedNoteIds } = usePianoRoll()
+  const { position } = usePlayer()
+  const { pushHistory } = useHistory()
+  const pianoRollEditor = usePianoRollEditor()
+
+  return useCallback(
+    (atTick?: number) => {
+      if (selectedNoteIds.length === 0) {
+        return
+      }
+      pushHistory()
+      const parts = pianoRollEditor.splitNotes(
+        selectedNoteIds,
+        Math.round(atTick ?? position),
+      )
+      if (parts.length > 0) {
+        setSelectedNoteIds([...new Set([...selectedNoteIds, ...parts])])
+      }
+    },
+    [
+      selectedNoteIds,
+      setSelectedNoteIds,
+      position,
+      pushHistory,
+      pianoRollEditor,
+    ],
+  )
+}
+
+export const useJoinSelectedNotes = () => {
+  const { selectedNoteIds, setSelectedNoteIds } = usePianoRoll()
+  const { pushHistory } = useHistory()
+  const pianoRollEditor = usePianoRollEditor()
+
+  return useCallback(() => {
+    if (selectedNoteIds.length < 2) {
+      return
+    }
+    pushHistory()
+    pianoRollEditor.joinNotes(selectedNoteIds)
+    setSelectedNoteIds(
+      selectedNoteIds.filter(
+        (id) => pianoRollEditor.getNotesByIds([id]).length > 0,
+      ),
+    )
+  }, [selectedNoteIds, setSelectedNoteIds, pushHistory, pianoRollEditor])
+}
+
 export const useSelectAllNotes = () => {
   const { setSelectedNoteIds } = usePianoRoll()
   const pianoRollEditor = usePianoRollEditor()

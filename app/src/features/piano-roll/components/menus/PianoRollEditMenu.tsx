@@ -7,11 +7,13 @@ import {
   useCopySelection,
   useDeleteSelection,
   useDuplicateSelection,
+  useJoinSelectedNotes,
   usePasteSelection,
   useQuantizeSelectedNotes,
   useSelectAllNotes,
   useSelectNextNote,
   useSelectPreviousNote,
+  useSplitSelectedNotes,
   useTransposeSelection,
 } from "../../hooks/selection"
 import { usePianoRoll } from "../../hooks/usePianoRoll"
@@ -29,6 +31,8 @@ export const PianoRollEditMenu: FC = () => {
   const selectPreviousNote = useSelectPreviousNote()
   const quantizeSelectedNotes = useQuantizeSelectedNotes()
   const transposeSelection = useTransposeSelection()
+  const splitSelectedNotes = useSplitSelectedNotes()
+  const joinSelectedNotes = useJoinSelectedNotes()
   const anySelectedNotes = selectedNoteIds.length > 0
 
   const onClickCut = useCallback(async () => {
@@ -84,6 +88,14 @@ export const PianoRollEditMenu: FC = () => {
     setOpenVelocityDialog(true)
   }, [setOpenVelocityDialog])
 
+  const onClickSplit = useCallback(() => {
+    splitSelectedNotes()
+  }, [splitSelectedNotes])
+
+  const onClickJoin = useCallback(() => {
+    joinSelectedNotes()
+  }, [joinSelectedNotes])
+
   return (
     <EditMenuPortal>
       <MenuDivider />
@@ -111,6 +123,16 @@ export const PianoRollEditMenu: FC = () => {
       <MenuItem onClick={onClickDuplicate} disabled={!anySelectedNotes}>
         <Localized name="duplicate" />
         <HotKey>{envString.cmdOrCtrl}+D</HotKey>
+      </MenuItem>
+
+      <MenuItem onClick={onClickSplit} disabled={!anySelectedNotes}>
+        <Localized name="split-notes" />
+        <HotKey>{envString.cmdOrCtrl}+E</HotKey>
+      </MenuItem>
+
+      <MenuItem onClick={onClickJoin} disabled={selectedNoteIds.length < 2}>
+        <Localized name="join-notes" />
+        <HotKey>{envString.cmdOrCtrl}+J</HotKey>
       </MenuItem>
 
       <MenuDivider />
