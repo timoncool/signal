@@ -1,11 +1,29 @@
+import { isDevelopment } from "../../helpers/isDevelopment"
+
+/**
+ * A half-open interval `[start, end)`. `start <= end` must always hold:
+ * never pass a possibly-reversed tuple as a Range, even to a function that
+ * would normalize it. Use `Range.fromUnordered` to build one from two
+ * unordered values, and use explicit start/end points (not Ranges) when the
+ * direction matters.
+ */
 export type Range = readonly [number, number]
 
 export namespace Range {
+  export function fromUnordered(a: number, b: number): Range {
+    return [Math.min(a, b), Math.max(a, b)]
+  }
+
   export function fromLength(start: number, length: number): Range {
     return [start, start + length]
   }
 
   export function create(start: number, end: number): Range {
+    if (isDevelopment() && start > end) {
+      throw new Error(
+        `Range.create requires start <= end, but got start=${start}, end=${end}`,
+      )
+    }
     return [start, end]
   }
 

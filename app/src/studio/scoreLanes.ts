@@ -3,12 +3,12 @@ import {
   isNoteEvent,
   isProgramChangeEvent,
   Measure,
-  NoteEvent,
-  Song,
-  Track,
-  TrackEventOf,
+  type NoteEvent,
+  type Song,
+  type Track,
+  type TrackEventOf,
 } from "@signal-app/core"
-import { MarkerEvent } from "midifile-ts"
+import type { MarkerEvent } from "midifile-ts"
 import { chordName } from "./chordSymbols"
 
 // A music studio's score as a song: chord symbols are the chords a track
@@ -62,7 +62,9 @@ export function isSectionName(text: string): boolean {
     .filter(Boolean)
     .join(" ")
   return SECTION_LABELS.some((label) => {
-    if (!clean.startsWith(label)) return false
+    if (!clean.startsWith(label)) {
+      return false
+    }
     const next = clean.charAt(label.length)
     return next === "" || /[\s\d:.-]/.test(next)
   })
@@ -123,22 +125,43 @@ export function sectionsOf(song: Song): LaneSection[] {
 export function repeatedChordTicks(song: Song, tick: number): number[] {
   const sections = sectionsOf(song)
   const index = sections.filter((section) => section.tick <= tick).length - 1
-  if (index < 0) return [tick]
+  if (index < 0) {
+    return [tick]
+  }
   const source = sections[index]
   const stop = sections[index + 1]?.tick ?? song.endOfSong
   const length = stop - source.tick
   const offset = tick - source.tick
-  const kind = (name: string) => name.toLowerCase().trim().replace(/[\s._-]*\d+$/, "")
+  const kind = (name: string) =>
+    name
+      .toLowerCase()
+      .trim()
+      .replace(/[\s._-]*\d+$/, "")
   const chords = chordsOf(song)
-  const pattern = (start: number, end: number) => JSON.stringify(chords
-    .filter((chord) => chord.tick < end && chord.end > start)
-    .map((chord) => [Math.max(chord.tick, start) - start, Math.min(chord.end, end) - start, chord.name]))
+  const pattern = (start: number, end: number) =>
+    JSON.stringify(
+      chords
+        .filter((chord) => chord.tick < end && chord.end > start)
+        .map((chord) => [
+          Math.max(chord.tick, start) - start,
+          Math.min(chord.end, end) - start,
+          chord.name,
+        ]),
+    )
   const original = pattern(source.tick, stop)
-  return [tick, ...sections.flatMap((section, other) => {
-    const end = sections[other + 1]?.tick ?? song.endOfSong
-    return other !== index && kind(section.name) === kind(source.name) && end - section.tick === length && offset < length && pattern(section.tick, end) === original
-      ? [section.tick + offset] : []
-  })]
+  return [
+    tick,
+    ...sections.flatMap((section, other) => {
+      const end = sections[other + 1]?.tick ?? song.endOfSong
+      return other !== index &&
+        kind(section.name) === kind(source.name) &&
+        end - section.tick === length &&
+        offset < length &&
+        pattern(section.tick, end) === original
+        ? [section.tick + offset]
+        : []
+    }),
+  ]
 }
 
 /** The bar a tick falls in: its first tick and its length. */
@@ -156,7 +179,9 @@ function addChordsTrack(song: Song): Track {
   const track = emptyTrack(channel)
   track.setName(CHORDS_TRACK)
   const program = track.events.find(isProgramChangeEvent)
-  if (program) track.updateEvent(program.id, { value: CHORDS_PROGRAM })
+  if (program) {
+    track.updateEvent(program.id, { value: CHORDS_PROGRAM })
+  }
   song.addTrack(track)
   return track
 }
@@ -193,14 +218,20 @@ export function setChord(song: Song, tick: number, pitches: number[]) {
 /** The chord at `tick` taken out; the one before it holds on through its place. */
 export function removeChord(song: Song, tick: number) {
   const track = chordsTrack(song)
-  if (!track) return
+  if (!track) {
+    return
+  }
   const notes = track.events.filter(isNoteEvent)
   const here = notes.filter((note) => note.tick === tick)
-  if (here.length === 0) return
+  if (here.length === 0) {
+    return
+  }
   const end = Math.max(...here.map((note) => note.tick + note.duration))
   track.removeEvents(here.map((note) => note.id))
   const before = notes.filter((note) => note.tick < tick)
-  if (before.length === 0) return
+  if (before.length === 0) {
+    return
+  }
   const previous = Math.max(...before.map((note) => note.tick))
   for (const note of before) {
     if (note.tick === previous && note.tick + note.duration === tick) {
@@ -211,7 +242,9 @@ export function removeChord(song: Song, tick: number) {
 
 export function setSection(song: Song, tick: number, name: string) {
   const conductor = song.conductorTrack
-  if (!conductor) return
+  if (!conductor) {
+    return
+  }
   const existing = sectionsOf(song).find((section) => section.tick === tick)
   if (existing) {
     conductor.updateEvent<TrackEventOf<MarkerEvent>>(existing.id, {

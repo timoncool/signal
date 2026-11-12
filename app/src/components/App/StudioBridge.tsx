@@ -1,13 +1,13 @@
 import { emptySong, songToMidi } from "@signal-app/core"
-import { FC, useEffect, useRef } from "react"
+import { type FC, useEffect, useRef } from "react"
 import { useSetSong } from "../../actions"
 import { songFromArrayBuffer } from "../../actions/file"
-import { useExport } from "../../hooks/useExport"
-import { useSettings } from "../../hooks/useSettings"
+import { useExport } from "../../features/export/hooks/useExport"
+import { useSettings } from "../../features/setting/hooks/useSettings"
 import { useSong } from "../../hooks/useSong"
 import { useStores } from "../../hooks/useStores"
-import { Language } from "../../localize/useLocalization"
-import { ThemeType } from "../../theme/Theme"
+import type { Language } from "../../localize/useLocalization"
+import type { ThemeType } from "../../theme/Theme"
 
 // The studio that opened signal in its window talks to it with messages:
 // it hands a song in, asks for the song as a MIDI file or as WAV audio when
@@ -49,7 +49,9 @@ export const StudioBridge: FC = () => {
   useEffect(() => {
     const look = (language: string | null, theme: string | null) => {
       const chosen = language ? LANGUAGES[language] : undefined
-      if (chosen) setLanguage(chosen)
+      if (chosen) {
+        setLanguage(chosen)
+      }
       if (theme === "dark" || theme === "light") {
         setThemeType(theme as ThemeType)
       }
@@ -63,7 +65,9 @@ export const StudioBridge: FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 200))
       }
       if (synth.loadedSoundFont === null) {
-        throw new Error("The SoundFont did not load. Reopen the MIDI editor and try again.")
+        throw new Error(
+          "The SoundFont did not load. Reopen the MIDI editor and try again.",
+        )
       }
     }
 

@@ -1,13 +1,15 @@
-import { useCallback } from "react"
-import { useAutoSave } from "../../hooks/useAutoSave"
-import { Localized } from "../../localize/useLocalization"
 import {
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogDescription,
   DialogTitle,
-} from "../Dialog/Dialog"
-import { Button, PrimaryButton } from "../ui/Button"
+  PrimaryButton,
+} from "@signal-app/ui"
+import { useCallback } from "react"
+import { useAutoSave } from "../../hooks/useAutoSave"
+import { Localized } from "../../localize/useLocalization"
 
 export interface AutoSaveDialogProps {
   open: boolean
@@ -42,7 +44,9 @@ export const AutoSaveDialog: React.FC<AutoSaveDialogProps> = ({
         <Localized name="auto-save-dialog-title" />
       </DialogTitle>
       <DialogContent>
-        <Localized name="auto-save-dialog-description" />
+        <DialogDescription>
+          <Localized name="auto-save-dialog-description" />
+        </DialogDescription>
         {lastSaveTime && (
           <p>
             <Localized name="auto-save-dialog-last-save-time" />{" "}

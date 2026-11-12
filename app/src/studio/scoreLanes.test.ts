@@ -1,6 +1,14 @@
 import { emptySong, songFromMidi, songToMidi } from "@signal-app/core"
+import { describe, expect, it } from "vitest"
 import { chordPitches } from "./chordSymbols"
-import { chordsOf, removeChord, repeatedChordTicks, sectionsOf, setChord, setSection } from "./scoreLanes"
+import {
+  chordsOf,
+  removeChord,
+  repeatedChordTicks,
+  sectionsOf,
+  setChord,
+  setSection,
+} from "./scoreLanes"
 
 describe("a studio score through a MIDI file", () => {
   it("mirrors repeated sections only while their entire harmony still matches", () => {
@@ -17,9 +25,15 @@ describe("a studio score through a MIDI file", () => {
     expect(repeatedChordTicks(song, 0)).toEqual([0, bar * 2, bar * 4])
     setChord(song, bar * 5, chordPitches("F")!)
     expect(repeatedChordTicks(song, 0)).toEqual([0, bar * 2])
-    for (const start of repeatedChordTicks(song, 0)) setChord(song, start, chordPitches("C")!)
+    for (const start of repeatedChordTicks(song, 0)) {
+      setChord(song, start, chordPitches("C")!)
+    }
     const reopened = songFromMidi(songToMidi(song))
-    expect(chordsOf(reopened).filter((chord) => [0, bar * 2, bar * 4].includes(chord.tick)).map((chord) => chord.name)).toEqual(["C", "C", "Am7"])
+    expect(
+      chordsOf(reopened)
+        .filter((chord) => [0, bar * 2, bar * 4].includes(chord.tick))
+        .map((chord) => chord.name),
+    ).toEqual(["C", "C", "Am7"])
   })
   it("keeps chord timing, slash bass and section markers after reopening", () => {
     const song = emptySong()
@@ -33,7 +47,9 @@ describe("a studio score through a MIDI file", () => {
       { tick: 0, end: bar, name: "Am7" },
       { tick: bar, end: bar * 2, name: "F#m(maj7)/C#" },
     ])
-    expect(sectionsOf(reopened).map(({ tick, name }) => ({ tick, name }))).toEqual([
+    expect(
+      sectionsOf(reopened).map(({ tick, name }) => ({ tick, name })),
+    ).toEqual([
       { tick: 0, name: "Verse" },
       { tick: bar, name: "Chorus 2" },
     ])

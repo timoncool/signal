@@ -1,19 +1,18 @@
-import { FC } from "react"
-import { StyledFirebaseAuth } from "../../auth/StyledFirebaseAuth"
+import styled from "@emotion/styled"
 import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogDescription,
   DialogTitle,
-} from "../Dialog/Dialog"
-
-import styled from "@emotion/styled"
+} from "@signal-app/ui"
+import type { FC } from "react"
+import { StyledFirebaseAuth } from "../../auth/StyledFirebaseAuth"
 import "firebase/auth"
+import { Alert, Button } from "@signal-app/ui"
 import { GithubAuthProvider, GoogleAuthProvider } from "firebase/auth"
 import { auth } from "../.././firebase/firebase"
 import { Localized } from "../../localize/useLocalization"
-import { Alert } from "../ui/Alert"
-import { Button } from "../ui/Button"
 
 const BetaLabel = styled.span`
   border: 1px solid currentColor;
@@ -23,7 +22,7 @@ const BetaLabel = styled.span`
   color: var(--color-text-secondary);
 `
 
-const Description = styled.div`
+const Description = styled(DialogDescription)`
   margin: 1rem 0 2rem 0;
   line-height: 1.5;
 `

@@ -55,15 +55,25 @@ const ROOT = /^([A-G](?:##|bb|#|b)?)(.*)$/
 /** The pitches a symbol is held as, or null when it is no chord a score knows. */
 export function chordPitches(symbol: string): number[] | null {
   const [head, bass, extra] = symbol.trim().split("/")
-  if (extra !== undefined || !head) return null
+  if (extra !== undefined || !head) {
+    return null
+  }
   const match = ROOT.exec(head)
-  if (!match) return null
+  if (!match) {
+    return null
+  }
   const steps = QUALITY_STEPS.find(([quality]) => quality === match[2])?.[1]
-  if (!steps) return null
-  if (bass !== undefined && !/^[A-G](?:##|bb|#|b)?$/.test(bass)) return null
+  if (!steps) {
+    return null
+  }
+  if (bass !== undefined && !/^[A-G](?:##|bb|#|b)?$/.test(bass)) {
+    return null
+  }
   const base = CHORD_ROOT + pitchClass(match[1])
   const pitches = steps.map((step) => base + step)
-  if (bass !== undefined) pitches.unshift(CHORD_ROOT - 12 + pitchClass(bass))
+  if (bass !== undefined) {
+    pitches.unshift(CHORD_ROOT - 12 + pitchClass(bass))
+  }
   return pitches
 }
 
@@ -85,7 +95,9 @@ const shapeOf = (
   }
   for (const root of prefer) {
     const candidate = found.find(([each]) => each === root)
-    if (candidate) return candidate
+    if (candidate) {
+      return candidate
+    }
   }
   return found[0] ?? null
 }
@@ -94,7 +106,9 @@ const shapeOf = (
 export function chordName(notes: number[]): string | null {
   const pitches = [...new Set(notes)].sort((a, b) => a - b)
   const classes = new Set(pitches.map(mod12))
-  if (classes.size < 3) return null
+  if (classes.size < 3) {
+    return null
+  }
   const [bass, ...upper] = pitches
   const above = new Set(upper.map(mod12))
   const tries: [Set<number>, number[]][] = []
@@ -102,10 +116,14 @@ export function chordName(notes: number[]): string | null {
     tries.push([above, [mod12(upper[0]), mod12(bass)]])
   }
   tries.push([classes, [mod12(bass), mod12(upper[0])]])
-  if (!above.has(mod12(bass))) tries.push([above, [mod12(upper[0])]])
+  if (!above.has(mod12(bass))) {
+    tries.push([above, [mod12(upper[0])]])
+  }
   for (const [wanted, prefer] of tries) {
     const shape = shapeOf(wanted, prefer)
-    if (!shape) continue
+    if (!shape) {
+      continue
+    }
     const [root, quality] = shape
     const slash = mod12(bass) === root ? "" : `/${SHARP_NAMES[mod12(bass)]}`
     return `${SHARP_NAMES[root]}${quality}${slash}`

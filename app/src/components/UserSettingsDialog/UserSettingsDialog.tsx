@@ -1,11 +1,10 @@
 import styled from "@emotion/styled"
 import { DialogTitle } from "@radix-ui/react-dialog"
-import { FC } from "react"
+import { Button, Dialog, DialogActions, DialogContent } from "@signal-app/ui"
+import type { FC } from "react"
 import { useAuth } from "../../hooks/useAuth"
 import { useRootView } from "../../hooks/useRootView"
 import { Localized } from "../../localize/useLocalization"
-import { Dialog, DialogActions, DialogContent } from "../Dialog/Dialog"
-import { Button } from "../ui/Button"
 
 const UserIcon = styled.img`
   width: 3rem;
@@ -70,7 +69,11 @@ export const UserSettingsDialog: FC = () => {
   }
 
   return (
-    <Dialog open={openUserSettingsDialog} style={{ minWidth: "30rem" }}>
+    <Dialog
+      open={openUserSettingsDialog}
+      style={{ minWidth: "30rem" }}
+      aria-describedby={undefined}
+    >
       <DialogTitle>
         <Localized name="user-settings" />
       </DialogTitle>

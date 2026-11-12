@@ -25,6 +25,7 @@ export default {
     channel: "Channel",
     categories: "Categories",
     instruments: "Instruments",
+    "select-instrument": "Select Instrument",
     "rhythm-track": "Rhythm Track",
     "conductor-track": "Conductor Track",
     "track-name": "Track Name",
@@ -382,6 +383,7 @@ export default {
     "score-section-hint":
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental or Outro, a number may follow. Leave it empty to remove the section.",
     "score-section-unknown": "Not a section the score knows",
+    "set-value": "Set Value",
   },
   fr: {
     "piano-roll": "Rouleau de piano",
@@ -409,6 +411,7 @@ export default {
     channel: "Chaîne",
     categories: "Catégories",
     instruments: "Instruments",
+    "select-instrument": "Sélectionner un instrument",
     "rhythm-track": "Piste de Rythme",
     "conductor-track": "Piste Conductrice",
     "track-name": "Nom de la Piste",
@@ -768,6 +771,7 @@ export default {
     "score-section-hint":
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental ou Outro, éventuellement suivi d'un numéro. Laissez vide pour enlever la section.",
     "score-section-unknown": "Section non reconnue par la partition",
+    "set-value": "Définir la valeur",
   },
   ja: {
     "piano-roll": "ピアノロール",
@@ -795,6 +799,7 @@ export default {
     channel: "チャンネル",
     categories: "カテゴリ",
     instruments: "楽器",
+    "select-instrument": "楽器を選択",
     "rhythm-track": "リズムトラック",
     "conductor-track": "コンダクタートラック",
     "track-name": "トラック名",
@@ -1148,6 +1153,7 @@ export default {
     "score-section-hint":
       "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental、Outro のいずれかで、後ろに番号を付けられます。空にするとセクションを削除します。",
     "score-section-unknown": "譜面が認識できないセクションです",
+    "set-value": "値を設定",
   },
   "zh-Hans": {
     "piano-roll": "钢琴卷",
@@ -1175,6 +1181,7 @@ export default {
     channel: "频道",
     categories: "类别",
     instruments: "乐器",
+    "select-instrument": "选择乐器",
     "rhythm-track": "节奏轨",
     "conductor-track": "指挥轨",
     "track-name": "音轨名",
@@ -1528,6 +1535,7 @@ export default {
     "score-section-hint":
       "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental或Outro，后面可加数字。留空则删除该段落。",
     "score-section-unknown": "乐谱无法识别该段落",
+    "set-value": "设置值",
   },
   "zh-Hant": {
     "piano-roll": "鋼琴卷軸",
@@ -1555,6 +1563,7 @@ export default {
     channel: "頻道",
     categories: "類別",
     instruments: "樂器",
+    "select-instrument": "選擇樂器",
     "rhythm-track": "節奏軌",
     "conductor-track": "指揮軌",
     "track-name": "音軌名稱",
@@ -1907,6 +1916,7 @@ export default {
     "score-section-hint":
       "Intro、Verse、Pre-Chorus、Chorus、Bridge、Interlude、Instrumental或Outro，後面可加數字。留空則移除該段落。",
     "score-section-unknown": "樂譜無法辨識此段落",
+    "set-value": "設定值",
   },
   sk: {
     "piano-roll": "Piano Roll",
@@ -1934,6 +1944,7 @@ export default {
     channel: "Kanál",
     categories: "Kategórie",
     instruments: "Nástroje",
+    "select-instrument": "Vybrať nástroj",
     "rhythm-track": "Rytmická stopa",
     "conductor-track": "Dirigentská stopa",
     "track-name": "Názov stopy",
@@ -2289,6 +2300,7 @@ export default {
     "score-section-hint":
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental alebo Outro, môže nasledovať číslo. Prázdne pole sekciu odstráni.",
     "score-section-unknown": "Partitúra nepozná túto sekciu",
+    "set-value": "Nastaviť hodnotu",
   },
   ru: {
     "piano-roll": "Пиано-ролл",
@@ -2671,6 +2683,8 @@ export default {
     "score-section-hint":
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental или Outro, можно с номером. Пусто — убрать секцию.",
     "score-section-unknown": "Партитура не знает такой секции",
+    "set-value": "Задать значение",
+    "select-instrument": "Выбрать инструмент",
   },
   ko: {
     "piano-roll": "피아노 롤",
@@ -3051,5 +3065,7 @@ export default {
     "score-section-hint":
       "Intro, Verse, Pre-Chorus, Chorus, Bridge, Interlude, Instrumental, Outro 중 하나이며 뒤에 숫자를 붙일 수 있습니다. 비워 두면 섹션이 제거됩니다.",
     "score-section-unknown": "악보가 인식하지 못하는 섹션입니다",
+    "set-value": "값 설정",
+    "select-instrument": "악기 선택",
   },
 } as const

@@ -1,13 +1,14 @@
-import { FC, useEffect, useState } from "react"
-import { Localized } from "../../localize/useLocalization"
 import {
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-} from "../Dialog/Dialog"
-import { Button, PrimaryButton } from "../ui/Button"
-import { TextField } from "../ui/TextField"
+  PrimaryButton,
+  TextField,
+} from "@signal-app/ui"
+import { type FC, useEffect, useState } from "react"
+import { Localized } from "../../localize/useLocalization"
 
 export interface TransposeDialogProps {
   open: boolean
@@ -30,13 +31,13 @@ export const TransposeDialog: FC<TransposeDialogProps> = ({
   }, [open])
 
   const _onClickOK = () => {
-    const value = parseInt(input)
-    onClickOK(isNaN(value) ? 0 : value)
+    const value = parseInt(input, 10)
+    onClickOK(Number.isNaN(value) ? 0 : value)
     onClose()
   }
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose} aria-describedby={undefined}>
       <DialogTitle>
         <Localized name="transpose" />
       </DialogTitle>
