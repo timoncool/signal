@@ -3,11 +3,11 @@ import useComponentSize from "@rehooks/component-size"
 import { clamp } from "lodash"
 import { type FC, useCallback, useEffect, useRef } from "react"
 import { Layout, WHEEL_SCROLL_RATE } from "../../../Constants"
-import { isRunningInStudio } from "../../../helpers/platform"
 import {
   HorizontalScaleScrollBar,
   VerticalScaleScrollBar,
 } from "../../../components/inputs/ScaleScrollBar"
+import { isRunningInStudio } from "../../../helpers/platform"
 import { isTouchPadEvent } from "../../../helpers/touchpad"
 import { useTickScroll } from "../../../hooks/useTickScroll"
 import { useTrack } from "../../../hooks/useTrack"

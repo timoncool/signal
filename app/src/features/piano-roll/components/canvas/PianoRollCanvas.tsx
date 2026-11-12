@@ -1,4 +1,3 @@
-import { studioCanvasProps } from "../../../../helpers/studioCanvas"
 import { useTheme } from "@emotion/react"
 import { GLCanvas, Transform } from "@ryohey/webgl-react"
 import {
@@ -12,6 +11,7 @@ import {
 import { Beats } from "../../../../components/GLNodes/Beats"
 import { Cursor } from "../../../../components/GLNodes/Cursor"
 import { matrixFromTranslation } from "../../../../helpers/matrix"
+import { studioCanvasProps } from "../../../../helpers/studioCanvas"
 import { useBeats } from "../../../../hooks/useBeats"
 import { useContextMenu } from "../../../../hooks/useContextMenu"
 import { useTickScroll } from "../../../../hooks/useTickScroll"
